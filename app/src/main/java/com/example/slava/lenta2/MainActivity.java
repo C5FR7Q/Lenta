@@ -17,12 +17,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (MainPresenter.getInstance().shouldFinish())
-            finish();
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_PRESENTER, MainPresenter.getInstance());

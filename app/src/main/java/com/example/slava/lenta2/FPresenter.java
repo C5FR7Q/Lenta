@@ -64,9 +64,10 @@ public class FPresenter implements Parcelable{
 //  Видимо здесь бы пригодился Dagger со своим Dependency Injection
     public void onViewButtonClicked(){
         fragMan.beginTransaction()
+                .addToBackStack(null)
                 .replace(R.id.content, fragment)
                 .commit();
-        MainPresenter.getInstance().setSelectedTitle(title);
+//        MainPresenter.getInstance().setSelectedTitle(title);
     }
 
     public String getTitle() {
