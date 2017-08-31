@@ -19,6 +19,9 @@ import io.reactivex.Observable;
  */
 
 public class FPresenter implements Parcelable{
+
+    private RvAdapter adapter;
+
     interface FragListener{
         RecyclerView getRec();
         Context getCtx();
@@ -55,7 +58,8 @@ public class FPresenter implements Parcelable{
         }
 
 
-        rec.setAdapter(new RvAdapter(fragListener.getCtx(), datas));
+        adapter = new RvAdapter(fragListener.getCtx(), datas);
+        rec.setAdapter(adapter);
         fragMan = fragListener.getFm();
         this.fragment = fragment;
     }
@@ -67,6 +71,8 @@ public class FPresenter implements Parcelable{
                 .addToBackStack(null)
                 .replace(R.id.content, fragment)
                 .commit();
+        adapter.setFullSize();
+        adapter.notifyDataSetChanged();
 //        MainPresenter.getInstance().setSelectedTitle(title);
     }
 

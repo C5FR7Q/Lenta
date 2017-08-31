@@ -27,6 +27,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
     public static final int COUNT = 4;
     private List<Data> datas = new ArrayList<>();
     private int size;
+    private int fulSize;
     private Context context;
 
     private static final String TAG = "RvAdapter";
@@ -35,10 +36,10 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
         this.context = context;
         datas.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .take(COUNT)
                 .subscribe(data -> {
                     this.datas = data;
                     this.size = COUNT;
+                    fulSize = data.size();
                     notifyDataSetChanged();
                 });
     }
@@ -81,7 +82,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
         return size;
     }
 
-
+    public void setFullSize() {
+        this.size = fulSize;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvArticleTitle, tvArticleBody, tvArticleDate, tvArticleCategory;
