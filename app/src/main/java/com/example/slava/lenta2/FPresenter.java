@@ -22,6 +22,9 @@ public class FPresenter implements Parcelable{
 
     private RvAdapter adapter;
     private FragListener fragListener;
+    private boolean includeDescription;
+
+
 
     interface FragListener{
         RecyclerView getRec();
@@ -35,36 +38,56 @@ public class FPresenter implements Parcelable{
 //    private Fragment fragment;
 
     public FPresenter(FragListener fragListener, Fragment fragment) {
-        RecyclerView rec = fragListener.getRec();
         this.fragListener = fragListener;
         title = this.fragListener.getTitle();
-        boolean includeDescription = false;
+        includeDescription = false;
+        RecyclerView.LayoutManager layoutManager = null;
         switch (title){
             case OneFragment.VAL_ALL:
                 datas = LentaClient.getInstance().getAll();
-//                rec.setLayoutManager(new GridLayoutManager(fragListener.getCtx(), 2));
-                rec.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 break;
             case OneFragment.VAL_HOTTEST:
                 datas = LentaClient.getInstance().getHottest();
-                rec.setLayoutManager(new LinearLayoutManager(fragListener.getCtx()));
+                layoutManager = new LinearLayoutManager(fragListener.getCtx());
                 includeDescription = true;
                 break;
             case OneFragment.VAL_NEWEST:
                 datas = LentaClient.getInstance().getNewest();
-//                rec.setLayoutManager(new GridLayoutManager(fragListener.getCtx(), 2));
-                rec.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 break;
         }
 
+        fragListener.getRec().setLayoutManager(layoutManager);
         adapter = new RvAdapter(fragListener.getCtx(), datas, includeDescription);
-        rec.setAdapter(adapter);
+        fragListener.getRec().setAdapter(adapter);
+
+
 //        fragMan = fragListener.getFm();
 //        this.fragment = fragment;
     }
 
+    public void reload(FragListener fragListener) {
+        this.fragListener = fragListener;
+        RecyclerView.LayoutManager layoutManager = null;
+        switch (title){
+            case OneFragment.VAL_ALL:
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                break;
+            case OneFragment.VAL_HOTTEST:
+                layoutManager = new LinearLayoutManager(fragListener.getCtx());
+                break;
+            case OneFragment.VAL_NEWEST:
+                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                break;
+        }
 
-//  Видимо здесь бы пригодился Dagger со своим Dependency Injection
+        fragListener.getRec().setLayoutManager(layoutManager);
+        adapter = new RvAdapter(fragListener.getCtx(), datas, includeDescription);
+        fragListener.getRec().setAdapter(adapter);
+    }
+
+    //  Видимо здесь бы пригодился Dagger со своим Dependency Injection
     public void onViewButtonClicked(){
         MainPresenter instance = MainPresenter.getInstance();
         switch (title){
@@ -96,15 +119,15 @@ public class FPresenter implements Parcelable{
         adapter.setCutSize();
     }
 
-    public void reload(){
-        fragListener.getRec().setAdapter(adapter);
-    }
-
-//    public String getTitle() {
+    //    public String getTitle() {
 //        return title;
 //    }
 
+
+//Parcellable generation.
     protected FPresenter(Parcel in) {
+        includeDescription = in.readByte() != 0;
+        title = in.readString();
     }
 
     public static final Creator<FPresenter> CREATOR = new Creator<FPresenter>() {
@@ -126,6 +149,7 @@ public class FPresenter implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (includeDescription ? 1 : 0));
+        dest.writeString(title);
     }
-
 }

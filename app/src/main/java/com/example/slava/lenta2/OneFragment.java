@@ -47,15 +47,16 @@ public class OneFragment extends Fragment implements FPresenter.FragListener{
 
         initViews(view);
 
-        presenter = new FPresenter(this, this);
+//        presenter = new FPresenter(this, this);
 
-//        if (savedInstanceState != null) {
-//            presenter = savedInstanceState.getParcelable(KEY_PRESENTER);
-//            presenter.reload();
-//        }
-//        else {
-//            presenter = new FPresenter(this, this);
-//        }
+        if (savedInstanceState != null) {
+            presenter = savedInstanceState.getParcelable(KEY_PRESENTER);
+            Log.d(TAG, "onCreateView: ROTATED");
+            presenter.reload(this);
+        }
+        else {
+            presenter = new FPresenter(this, this);
+        }
 
         return view;
     }
