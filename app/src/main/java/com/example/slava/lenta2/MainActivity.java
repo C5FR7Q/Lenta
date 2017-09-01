@@ -15,9 +15,12 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Act
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main1);
+
+        init();
+
         if (savedInstanceState == null)
             MainPresenter.createPresenter(getFragmentManager(), this);
-        init();
+        else MainPresenter.update(this);
     }
 
     private void init() {
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Act
 
     @Override
     public void onBackPressed() {
-        if (MainPresenter.getInstance().shouldFinish())
+        if (MainPresenter.shouldFinish())
             finish();
     }
 
@@ -37,9 +40,9 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Act
         cnt[i].setVisibility(visibility);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(KEY_PRESENTER, MainPresenter.getInstance());
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putParcelable(KEY_PRESENTER, MainPresenter);
+//    }
 }

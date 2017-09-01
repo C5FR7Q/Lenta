@@ -58,6 +58,8 @@ public class OneFragment extends Fragment implements FPresenter.FragListener{
             presenter = new FPresenter(this, this);
         }
 
+        MainPresenter.putFragPresenter(presenter, getTitle());
+
         return view;
     }
 

@@ -83,10 +83,12 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
 
     public void setFullSize() {
         this.size = fulSize;
+        notifyDataSetChanged();
     }
 
     public void setCutSize() {
         this.size = cutSize;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

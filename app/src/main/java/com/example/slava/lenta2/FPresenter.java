@@ -89,32 +89,29 @@ public class FPresenter implements Parcelable{
 
     //  Видимо здесь бы пригодился Dagger со своим Dependency Injection
     public void onViewButtonClicked(){
-        MainPresenter instance = MainPresenter.getInstance();
+//        MainPresenter instance = MainPresenter.getInstance();
         switch (title){
             case OneFragment.VAL_HOTTEST:
-                instance.setVisibility(1, View.GONE);
-                instance.setVisibility(2, View.GONE);
+                MainPresenter.setVisibility(1, View.GONE);
+                MainPresenter.setVisibility(2, View.GONE);
                 break;
             case OneFragment.VAL_NEWEST:
-                instance.setVisibility(0, View.GONE);
-                instance.setVisibility(2, View.GONE);
+                MainPresenter.setVisibility(0, View.GONE);
+                MainPresenter.setVisibility(2, View.GONE);
                 break;
             case OneFragment.VAL_ALL:
-                instance.setVisibility(0, View.GONE);
-                instance.setVisibility(1, View.GONE);
+                MainPresenter.setVisibility(0, View.GONE);
+                MainPresenter.setVisibility(1, View.GONE);
                 break;
 
         }
-
         adapter.setFullSize();
-        adapter.notifyDataSetChanged();
-        fragListener.getRec().scrollToPosition(0);
-        instance.setSelected();
     }
 
 //    public void setFullSize(){
 //        adapter.setFullSize();
 //    }
+
     public void setCutSize() {
         adapter.setCutSize();
     }

@@ -16,14 +16,14 @@ public class MainPresenter implements Parcelable{
         void setVisibility(int i, int visibility);
     }
 
-    private ActVis actVis;
+    private static ActVis actVis;
     private static final String TAG = "MainPresenter";
     private static MainPresenter mainPresenter;
-    private OneFragment[] fragments = new OneFragment[3];
-    private FPresenter[] presenters = new FPresenter[3];
-    private FragmentManager fragmentManager;
-    private String selectedTitle;
-    private boolean selected = false;
+    private static OneFragment[] fragments = new OneFragment[3];
+    private static FPresenter[] presenters = new FPresenter[3];
+    private static int vis[] = new int[]{View.VISIBLE, View.VISIBLE, View.VISIBLE};
+    private static FragmentManager fragmentManager;
+    private static String selectedTitle;
 
     private MainPresenter(FragmentManager fragmentManager, ActVis actVis) {
         this.fragmentManager = fragmentManager;
@@ -62,11 +62,11 @@ public class MainPresenter implements Parcelable{
             mainPresenter = new MainPresenter(fragmentManager, actVis);
     }
 
-    public static MainPresenter getInstance(){
-        return mainPresenter;
-    }
+//    public static MainPresenter getInstance(){
+//        return mainPresenter;
+//    }
 
-    public void makeRightOrder(){
+    public static void makeRightOrder(){
         fragmentManager.beginTransaction()
                 .add(R.id.cnt1, fragments[0])
                 .add(R.id.cnt2, fragments[1])
@@ -74,15 +74,22 @@ public class MainPresenter implements Parcelable{
                 .commit();
     }
 
-    public void setVisibility(int i, int visibility){
+    public static void setVisibility(int i, int visibility){
         actVis.setVisibility(i, visibility);
+        vis[i] = visibility;
     }
 
 
-    public boolean shouldFinish() {
+    public static boolean shouldFinish() {
+        boolean selected = false;
+        for (int i = 0; i < 3; i++){
+            if (vis[i] == View.GONE){
+                selected = true;
+                break;
+            }
+        }
         if (selected) {
             showAll();
-            selected = false;
             return false;
         }
 
@@ -90,23 +97,31 @@ public class MainPresenter implements Parcelable{
 
     }
 
-    private void showAll() {
+    private static void showAll() {
         for (int i = 0; i < 3; i++) {
             setVisibility(i, View.VISIBLE);
-
             presenters[i].setCutSize();
         }
 
 
     }
 
+    public static void update(ActVis actVis){
+        MainPresenter.actVis = actVis;
+        for (int i = 0; i < 3; i++){
+            setVisibility(i, vis[i]);
+        }
+    }
+
+    public static void putFragPresenter(FPresenter presenter, String title){
+        if (title.equals(OneFragment.VAL_HOTTEST)) presenters[0] = presenter;
+        if (title.equals(OneFragment.VAL_NEWEST)) presenters[1] = presenter;
+        if (title.equals(OneFragment.VAL_ALL)) presenters[2] = presenter;
+    }
+
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public void setSelected() {
-        this.selected = true;
     }
 
     @Override
