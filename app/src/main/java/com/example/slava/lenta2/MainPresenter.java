@@ -2,16 +2,17 @@ package com.example.slava.lenta2;
 
 import android.app.FragmentManager;
 import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 
 /**
  * Created by slava on 31.08.2017.
  */
 
-public class MainPresenter implements Parcelable{
+public class MainPresenter{
     interface ActVis{
         void setVisibility(int i, int visibility);
+        ActionBar supportActionBar();
     }
 
     private static ActVis actVis;
@@ -30,9 +31,9 @@ public class MainPresenter implements Parcelable{
         fragments[1] = (OneFragment.newInstance(OneFragment.VAL_NEWEST));
         fragments[2] = (OneFragment.newInstance(OneFragment.VAL_ALL));
 
-        presenters[0] = fragments[0].getPresenter();
-        presenters[1] = fragments[1].getPresenter();
-        presenters[2] = fragments[2].getPresenter();
+//        presenters[0] = fragments[0].getPresenter();
+//        presenters[1] = fragments[1].getPresenter();
+//        presenters[2] = fragments[2].getPresenter();
 
         this.actVis = actVis;
 
@@ -42,18 +43,6 @@ public class MainPresenter implements Parcelable{
     protected MainPresenter(Parcel in) {
         selectedTitle = in.readString();
     }
-
-    public static final Creator<MainPresenter> CREATOR = new Creator<MainPresenter>() {
-        @Override
-        public MainPresenter createFromParcel(Parcel in) {
-            return new MainPresenter(in);
-        }
-
-        @Override
-        public MainPresenter[] newArray(int size) {
-            return new MainPresenter[size];
-        }
-    };
 
     public static void createPresenter(FragmentManager fragmentManager, ActVis actVis){
         if (mainPresenter == null)
@@ -76,14 +65,18 @@ public class MainPresenter implements Parcelable{
 
     public static boolean shouldFinish() {
         boolean selected = false;
+        int index = 0;
         for (int i = 0; i < 3; i++){
             if (vis[i] == View.GONE){
                 selected = true;
-                break;
             }
+            else index = i;
         }
         if (selected) {
             showAll();
+            getActionBar().setTitle("Lenta");
+            getActionBar().setDisplayHomeAsUpEnabled(false);
+            presenters[index].showTitleAndButton(true);
             return false;
         }
 
@@ -100,10 +93,24 @@ public class MainPresenter implements Parcelable{
     }
 
     public static void update(ActVis actVis){
+        boolean alone = false;
+        String title = null;
         MainPresenter.actVis = actVis;
         for (int i = 0; i < 3; i++){
             setVisibility(i, vis[i]);
+            if (vis[i] == View.VISIBLE)
+                title = fragments[i].getTitle();
+            else alone = true;
         }
+
+        if (alone){
+            getActionBar().setTitle(title);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    public static ActionBar getActionBar(){
+        return actVis.supportActionBar();
     }
 
     public static void putFragPresenter(FPresenter presenter, String title){
@@ -112,13 +119,4 @@ public class MainPresenter implements Parcelable{
         if (title.equals(OneFragment.VAL_ALL)) presenters[2] = presenter;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(selectedTitle);
-    }
 }

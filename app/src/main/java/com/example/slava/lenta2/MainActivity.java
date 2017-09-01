@@ -1,6 +1,7 @@
 package com.example.slava.lenta2;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
@@ -38,4 +39,14 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Act
         cnt[i].setVisibility(visibility);
     }
 
+    @Override
+    public ActionBar supportActionBar() {
+        return getSupportActionBar();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

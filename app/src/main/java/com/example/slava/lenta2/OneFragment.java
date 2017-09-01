@@ -28,6 +28,8 @@ public class OneFragment extends Fragment implements FPresenter.FragListener{
     private RecyclerView recyclerView;
     private FPresenter presenter;
     private String title;
+    private TextView tvTitle;
+    private View btnView;
 
     public static OneFragment newInstance(String title){
         Log.d(TAG, "newInstance: Fragment created");
@@ -61,9 +63,11 @@ public class OneFragment extends Fragment implements FPresenter.FragListener{
     }
 
     private void initViews(View view) {
-        ((TextView) view.findViewById(R.id.tvFragmentTitle)).setText(title);
+        tvTitle = (TextView) view.findViewById(R.id.tvFragmentTitle);
+        tvTitle.setText(title);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-        (view.findViewById(R.id.button)).setOnClickListener(v -> presenter.onViewButtonClicked());
+        btnView = view.findViewById(R.id.button);
+        btnView.setOnClickListener(v -> presenter.onViewButtonClicked());
     }
 
     @Override
@@ -87,7 +91,21 @@ public class OneFragment extends Fragment implements FPresenter.FragListener{
         return title;
     }
 
-    public FPresenter getPresenter() {
-        return presenter;
+    @Override
+    public void showTitleAndButton(boolean b) {
+        if (b){
+            tvTitle.setVisibility(View.VISIBLE);
+            btnView.setVisibility(View.VISIBLE);
+        }
+        else {
+            tvTitle.setVisibility(View.GONE);
+            btnView.setVisibility(View.GONE);
+        }
     }
+
+//    public FPresenter getPresenter() {
+//        return presenter;
+//    }
+
+
 }

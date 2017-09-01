@@ -28,6 +28,7 @@ public class FPresenter implements Parcelable{
         RecyclerView getRec();
         Context getCtx();
         String getTitle();
+        void showTitleAndButton(boolean b);
     }
     private String title;
     private Observable<List<Data>> datas;
@@ -94,7 +95,15 @@ public class FPresenter implements Parcelable{
                 break;
 
         }
+
+        MainPresenter.getActionBar().setTitle(title);
+        MainPresenter.getActionBar().setDisplayHomeAsUpEnabled(true);
+        showTitleAndButton(false);
         adapter.setFullSize();
+    }
+
+    public void showTitleAndButton(boolean b) {
+        fragListener.showTitleAndButton(b);
     }
 
     public void setCutSize() {
