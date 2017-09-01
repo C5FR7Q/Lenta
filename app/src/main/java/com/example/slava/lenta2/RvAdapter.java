@@ -25,20 +25,22 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
     public static final int COUNT = 4;
+    private final boolean includeDesc;
     private List<Data> datas = new ArrayList<>();
     private int size;
+    private int cutSize;
     private int fulSize;
     private Context context;
 
-    private static final String TAG = "RvAdapter";
-
-    public RvAdapter(Context context, Observable<List<Data>> datas) {
+    public RvAdapter(Context context, Observable<List<Data>> datas, boolean includeDescription) {
         this.context = context;
+        this.includeDesc = includeDescription;
         datas.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> {
                     this.datas = data;
-                    this.size = COUNT;
+                    this.cutSize = COUNT;
+                    this.size = cutSize;
                     fulSize = data.size();
                     notifyDataSetChanged();
                 });
@@ -55,9 +57,12 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Data data = datas.get(position);
-        holder.tvArticleDate.setText(data.getPubDate());
+        holder.tvArticleDate.setText(data.getPubDate().substring(0, data.getPubDate().length() - 5));
         holder.tvArticleTitle.setText(data.getTitle());
-        holder.tvArticleBody.setText(data.getDescription());
+        if (includeDesc)
+            holder.tvArticleBody.setText(data.getDescription());
+        else
+            holder.tvArticleBody.setVisibility(View.GONE);
         holder.tvArticleCategory.setText(data.getCategory());
         holder.itemView.setOnClickListener(v -> context.startActivity(new Intent()
                 .setAction(Intent.ACTION_VIEW)
@@ -69,12 +74,6 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
                     .load(data.getPicLink())
                     .into(holder.iv);
         else holder.iv.setVisibility(View.GONE);
-//        Glide.with(context)
-//                .load(data.getPicLink())
-//                .override(180, 180)
-//                .placeholder(R.drawable.ic_image_black_24dp)
-//                .error(R.drawable.ic_broken_image_black_24dp)
-//                .into(holder.iv);
     }
 
     @Override
@@ -84,6 +83,10 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
 
     public void setFullSize() {
         this.size = fulSize;
+    }
+
+    public void setCutSize() {
+        this.size = cutSize;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

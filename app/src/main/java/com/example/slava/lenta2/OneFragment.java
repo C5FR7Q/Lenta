@@ -47,12 +47,15 @@ public class OneFragment extends Fragment implements FPresenter.FragListener{
 
         initViews(view);
 
-        if (savedInstanceState != null) {
-            presenter = savedInstanceState.getParcelable(KEY_PRESENTER);
-        }
-        else {
-            presenter = new FPresenter(this, this);
-        }
+        presenter = new FPresenter(this, this);
+
+//        if (savedInstanceState != null) {
+//            presenter = savedInstanceState.getParcelable(KEY_PRESENTER);
+//            presenter.reload();
+//        }
+//        else {
+//            presenter = new FPresenter(this, this);
+//        }
 
         return view;
     }
