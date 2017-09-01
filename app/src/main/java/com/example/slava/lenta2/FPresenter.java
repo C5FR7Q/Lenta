@@ -81,7 +81,6 @@ public class FPresenter implements Parcelable{
                 layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 break;
         }
-
         fragListener.getRec().setLayoutManager(layoutManager);
         adapter = new RvAdapter(fragListener.getCtx(), datas, includeDescription);
         fragListener.getRec().setAdapter(adapter);

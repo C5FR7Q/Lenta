@@ -37,6 +37,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="0dp"
+        android:nestedScrollingEnabled="false"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
