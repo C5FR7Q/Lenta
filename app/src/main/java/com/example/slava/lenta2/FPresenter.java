@@ -1,7 +1,5 @@
 package com.example.slava.lenta2;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -30,14 +28,11 @@ public class FPresenter implements Parcelable{
         RecyclerView getRec();
         Context getCtx();
         String getTitle();
-        FragmentManager getFm();
     }
     private String title;
     private Observable<List<Data>> datas;
-//    private FragmentManager fragMan;
-//    private Fragment fragment;
 
-    public FPresenter(FragListener fragListener, Fragment fragment) {
+    public FPresenter(FragListener fragListener) {
         this.fragListener = fragListener;
         title = this.fragListener.getTitle();
         includeDescription = false;
@@ -62,9 +57,6 @@ public class FPresenter implements Parcelable{
         adapter = new RvAdapter(fragListener.getCtx(), datas, includeDescription);
         fragListener.getRec().setAdapter(adapter);
 
-
-//        fragMan = fragListener.getFm();
-//        this.fragment = fragment;
     }
 
     public void reload(FragListener fragListener) {
@@ -86,9 +78,7 @@ public class FPresenter implements Parcelable{
         fragListener.getRec().setAdapter(adapter);
     }
 
-    //  Видимо здесь бы пригодился Dagger со своим Dependency Injection
     public void onViewButtonClicked(){
-//        MainPresenter instance = MainPresenter.getInstance();
         switch (title){
             case OneFragment.VAL_HOTTEST:
                 MainPresenter.setVisibility(1, View.GONE);
@@ -107,18 +97,9 @@ public class FPresenter implements Parcelable{
         adapter.setFullSize();
     }
 
-//    public void setFullSize(){
-//        adapter.setFullSize();
-//    }
-
     public void setCutSize() {
         adapter.setCutSize();
     }
-
-    //    public String getTitle() {
-//        return title;
-//    }
-
 
 //Parcellable generation.
     protected FPresenter(Parcel in) {

@@ -6,8 +6,6 @@ import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity implements MainPresenter.ActVis{
 
-
-    public static final String KEY_PRESENTER = "presenter";
     private LinearLayout[] cnt = new LinearLayout[3];
 
 
@@ -40,9 +38,4 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Act
         cnt[i].setVisibility(visibility);
     }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putParcelable(KEY_PRESENTER, MainPresenter);
-//    }
 }

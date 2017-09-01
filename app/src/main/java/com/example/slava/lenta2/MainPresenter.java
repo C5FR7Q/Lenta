@@ -10,8 +10,6 @@ import android.view.View;
  */
 
 public class MainPresenter implements Parcelable{
-//    Возможно, стоило использовать Map<String, OneFragment> вместо массива, где String -
-//    одна из переменных типа OneFragment.VAL_...
     interface ActVis{
         void setVisibility(int i, int visibility);
     }
@@ -62,10 +60,6 @@ public class MainPresenter implements Parcelable{
             mainPresenter = new MainPresenter(fragmentManager, actVis);
     }
 
-//    public static MainPresenter getInstance(){
-//        return mainPresenter;
-//    }
-
     public static void makeRightOrder(){
         fragmentManager.beginTransaction()
                 .add(R.id.cnt1, fragments[0])
@@ -102,7 +96,6 @@ public class MainPresenter implements Parcelable{
             setVisibility(i, View.VISIBLE);
             presenters[i].setCutSize();
         }
-
 
     }
 
