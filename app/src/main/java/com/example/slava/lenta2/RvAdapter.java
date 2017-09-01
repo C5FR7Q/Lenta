@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
     public static final int COUNT = 4;
-    private final boolean includeDesc;
+    private boolean includeDesc;
     private List<Data> datas = new ArrayList<>();
     private int size;
     private int cutSize;
@@ -59,10 +59,10 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
         Data data = datas.get(position);
         holder.tvArticleDate.setText(data.getPubDate().substring(0, data.getPubDate().length() - 5));
         holder.tvArticleTitle.setText(data.getTitle());
-        if (includeDesc)
+//        if (includeDesc)
             holder.tvArticleBody.setText(data.getDescription());
-        else
-            holder.tvArticleBody.setVisibility(View.GONE);
+//        else
+//            holder.tvArticleBody.setVisibility(View.GONE);
         holder.tvArticleCategory.setText(data.getCategory());
         holder.itemView.setOnClickListener(v -> context.startActivity(new Intent()
                 .setAction(Intent.ACTION_VIEW)
@@ -91,9 +91,14 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void setIncludeDesc(boolean includeDesc) {
+        this.includeDesc = includeDesc;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvArticleTitle, tvArticleBody, tvArticleDate, tvArticleCategory;
         private ImageView iv;
+
         public ViewHolder(View itemView) {
             super(itemView);
             tvArticleBody = (TextView) itemView.findViewById(R.id.tvArcticleBody);
@@ -101,6 +106,9 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
             tvArticleDate = (TextView) itemView.findViewById(R.id.tvArticleDate);
             tvArticleTitle = (TextView) itemView.findViewById(R.id.tvArticleTitle);
             iv = (ImageView)itemView.findViewById(R.id.iv);
+            if (!includeDesc)
+                tvArticleBody.setVisibility(View.GONE);
+            else tvArticleBody.setVisibility(View.VISIBLE);
         }
     }
 

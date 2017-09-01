@@ -99,6 +99,13 @@ public class FPresenter implements Parcelable{
         MainPresenter.getActionBar().setTitle(title);
         MainPresenter.getActionBar().setDisplayHomeAsUpEnabled(true);
         showTitleAndButton(false);
+
+        // TODO: 01.09.2017 from here
+        includeDescription = true;
+        fragListener.getRec().setLayoutManager(new LinearLayoutManager(fragListener.getCtx()));
+//        adapter = new RvAdapter(fragListener.getCtx(), datas, true);
+        ((RvAdapter) fragListener.getRec().getAdapter()).setIncludeDesc(includeDescription);
+        fragListener.getRec().setAdapter(adapter);
         adapter.setFullSize();
     }
 

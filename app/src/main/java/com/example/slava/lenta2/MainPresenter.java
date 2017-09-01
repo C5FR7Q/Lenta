@@ -74,9 +74,12 @@ public class MainPresenter{
         }
         if (selected) {
             showAll();
+
             getActionBar().setTitle("Lenta");
             getActionBar().setDisplayHomeAsUpEnabled(false);
             presenters[index].showTitleAndButton(true);
+
+//            presenters[index].setIncludeDescription(false);
             return false;
         }
 
