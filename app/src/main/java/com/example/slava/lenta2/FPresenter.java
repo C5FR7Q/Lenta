@@ -115,8 +115,9 @@ public class FPresenter implements Parcelable{
     }
 
     public void setManagerAndIncDesc(boolean b){
-        includeDescription = b;
-        if (!b){
+        if (!title.equals(OneFragment.VAL_HOTTEST))
+            includeDescription = b;
+        if (!includeDescription){
             if (!title.equals(OneFragment.VAL_HOTTEST))
             {
                 fragListener.getRec().setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
