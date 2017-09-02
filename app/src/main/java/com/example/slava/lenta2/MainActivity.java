@@ -5,7 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
-public class MainActivity extends AppCompatActivity implements MainPresenter.ActVis{
+public class MainActivity extends AppCompatActivity implements MainPresenter.MActToMPres {
 
     private LinearLayout[] cnt = new LinearLayout[3];
 

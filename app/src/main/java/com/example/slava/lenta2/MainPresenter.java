@@ -1,7 +1,6 @@
 package com.example.slava.lenta2;
 
 import android.app.FragmentManager;
-import android.os.Parcel;
 import android.support.v7.app.ActionBar;
 import android.view.View;
 
@@ -10,43 +9,39 @@ import android.view.View;
  */
 
 public class MainPresenter{
-    interface ActVis{
+
+    public static final String MAIN_TITLE = "Lenta";
+
+    interface MActToMPres {
         void setVisibility(int i, int visibility);
         ActionBar supportActionBar();
     }
+    interface FPresToMPres{
 
-    private static ActVis actVis;
-    private static final String TAG = "MainPresenter";
+    }
+
+    private static MActToMPres mActToMPres;
     private static MainPresenter mainPresenter;
     private static OneFragment[] fragments = new OneFragment[3];
     private static FPresenter[] presenters = new FPresenter[3];
     private static int vis[] = new int[]{View.VISIBLE, View.VISIBLE, View.VISIBLE};
     private static FragmentManager fragmentManager;
-    private static String selectedTitle;
 
-    private MainPresenter(FragmentManager fragmentManager, ActVis actVis) {
+    private MainPresenter(FragmentManager fragmentManager, MActToMPres mActToMPres) {
         this.fragmentManager = fragmentManager;
 
         fragments[0] = (OneFragment.newInstance(OneFragment.VAL_HOTTEST));
         fragments[1] = (OneFragment.newInstance(OneFragment.VAL_NEWEST));
         fragments[2] = (OneFragment.newInstance(OneFragment.VAL_ALL));
 
-//        presenters[0] = fragments[0].getPresenter();
-//        presenters[1] = fragments[1].getPresenter();
-//        presenters[2] = fragments[2].getPresenter();
-
-        this.actVis = actVis;
+        this.mActToMPres = mActToMPres;
 
         makeRightOrder();
     }
 
-    protected MainPresenter(Parcel in) {
-        selectedTitle = in.readString();
-    }
-
-    public static void createPresenter(FragmentManager fragmentManager, ActVis actVis){
+    public static void createPresenter(FragmentManager fragmentManager, MActToMPres MActToMPres){
         if (mainPresenter == null)
-            mainPresenter = new MainPresenter(fragmentManager, actVis);
+            mainPresenter = new MainPresenter(fragmentManager, MActToMPres);
     }
 
     public static void makeRightOrder(){
@@ -58,33 +53,29 @@ public class MainPresenter{
     }
 
     public static void setVisibility(int i, int visibility){
-        actVis.setVisibility(i, visibility);
+        mActToMPres.setVisibility(i, visibility);
         vis[i] = visibility;
     }
 
 
     public static boolean shouldFinish() {
         boolean selected = false;
-        int index = 0;
         for (int i = 0; i < 3; i++){
             if (vis[i] == View.GONE){
                 selected = true;
+                break;
             }
-            else index = i;
         }
         if (selected) {
             showAll();
-
-            getActionBar().setTitle("Lenta");
+            getActionBar().setTitle(MAIN_TITLE);
             getActionBar().setDisplayHomeAsUpEnabled(false);
-            presenters[index].showTitleAndButton(true);
-
-//            presenters[index].setIncludeDescription(false);
+            for (int i = 0; i < 3; i++)
+                presenters[i].showTitleAndButton(true);
             return false;
         }
 
         return true;
-
     }
 
     private static void showAll() {
@@ -95,10 +86,10 @@ public class MainPresenter{
 
     }
 
-    public static void update(ActVis actVis){
+    public static void update(MActToMPres MActToMPres){
         boolean alone = false;
         String title = null;
-        MainPresenter.actVis = actVis;
+        MainPresenter.mActToMPres = MActToMPres;
         for (int i = 0; i < 3; i++){
             setVisibility(i, vis[i]);
             if (vis[i] == View.VISIBLE)
@@ -113,7 +104,7 @@ public class MainPresenter{
     }
 
     public static ActionBar getActionBar(){
-        return actVis.supportActionBar();
+        return mActToMPres.supportActionBar();
     }
 
     public static void putFragPresenter(FPresenter presenter, String title){

@@ -58,25 +58,28 @@ public class FPresenter implements Parcelable{
         adapter = new RvAdapter(fragListener.getCtx(), datas, includeDescription);
         fragListener.getRec().setAdapter(adapter);
 
+        MainPresenter.putFragPresenter(this, title);
+
     }
 
     public void reload(FragListener fragListener) {
+        RecyclerView.LayoutManager layoutManager;
         this.fragListener = fragListener;
-        RecyclerView.LayoutManager layoutManager = null;
-        switch (title){
-            case OneFragment.VAL_ALL:
-                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                break;
-            case OneFragment.VAL_HOTTEST:
-                layoutManager = new LinearLayoutManager(fragListener.getCtx());
-                break;
-            case OneFragment.VAL_NEWEST:
-                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                break;
+
+        if (includeDescription){
+            layoutManager = new LinearLayoutManager(fragListener.getCtx());
         }
+        else layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
+        if (MainPresenter.getActionBar().getTitle().equals(MainPresenter.MAIN_TITLE)) {
+            showTitleAndButton(true);
+        }
+        else showTitleAndButton(false);
+
         fragListener.getRec().setLayoutManager(layoutManager);
         adapter = new RvAdapter(fragListener.getCtx(), datas, includeDescription);
         fragListener.getRec().setAdapter(adapter);
+        MainPresenter.putFragPresenter(this, title);
     }
 
     public void onViewButtonClicked(){

@@ -103,9 +103,4 @@ public class OneFragment extends Fragment implements FPresenter.FragListener{
         }
     }
 
-//    public FPresenter getPresenter() {
-//        return presenter;
-//    }
-
-
 }
