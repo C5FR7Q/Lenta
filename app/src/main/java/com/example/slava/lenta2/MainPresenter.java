@@ -82,6 +82,7 @@ public class MainPresenter{
         for (int i = 0; i < 3; i++) {
             setVisibility(i, View.VISIBLE);
             presenters[i].setCutSize();
+            presenters[i].setManagerAndIncDesc(false);
         }
 
     }

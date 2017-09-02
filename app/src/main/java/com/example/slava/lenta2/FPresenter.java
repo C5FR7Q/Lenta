@@ -104,12 +104,29 @@ public class FPresenter implements Parcelable{
         showTitleAndButton(false);
 
         // TODO: 01.09.2017 from here
+
         includeDescription = true;
-        fragListener.getRec().setLayoutManager(new LinearLayoutManager(fragListener.getCtx()));
 //        adapter = new RvAdapter(fragListener.getCtx(), datas, true);
+//        ((RvAdapter) fragListener.getRec().getAdapter()).setIncludeDesc(includeDescription);
+        setManagerAndIncDesc(true);
+//        fragListener.getRec().setAdapter(adapter);
+
+        adapter.setFullSize();
+    }
+
+    public void setManagerAndIncDesc(boolean b){
+        includeDescription = b;
+        if (!b){
+            if (!title.equals(OneFragment.VAL_HOTTEST))
+            {
+                fragListener.getRec().setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+            }
+        }
+        else {
+            fragListener.getRec().setLayoutManager(new LinearLayoutManager(fragListener.getCtx()));
+        }
         ((RvAdapter) fragListener.getRec().getAdapter()).setIncludeDesc(includeDescription);
         fragListener.getRec().setAdapter(adapter);
-        adapter.setFullSize();
     }
 
     public void showTitleAndButton(boolean b) {
