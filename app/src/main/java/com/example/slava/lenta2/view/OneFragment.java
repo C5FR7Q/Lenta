@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.view;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -11,11 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.slava.lenta2.presenter.FPresenter;
+import com.example.slava.lenta2.presenter.MainPresenter;
+import com.example.slava.lenta2.R;
+
 /**
  * Created by slava on 28.08.2017.
  */
 
-public class OneFragment extends Fragment implements FPresenter.FragListener{
+public class OneFragment extends Fragment implements FPresenter.FragListener {
     public static final String VAL_HOTTEST = "Hottest news";
     public static final String VAL_NEWEST = "Latest news";
     public static final String VAL_ALL = "All news";

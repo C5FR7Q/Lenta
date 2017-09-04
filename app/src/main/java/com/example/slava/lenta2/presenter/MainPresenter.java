@@ -1,8 +1,11 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.presenter;
 
 import android.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.view.View;
+
+import com.example.slava.lenta2.R;
+import com.example.slava.lenta2.view.OneFragment;
 
 /**
  * Created by slava on 31.08.2017.
@@ -12,7 +15,7 @@ public class MainPresenter{
 
     public static final String MAIN_TITLE = "Lenta";
 
-    interface MActToMPres {
+    public interface MActToMPres {
         void setVisibility(int i, int visibility);
         ActionBar supportActionBar();
     }

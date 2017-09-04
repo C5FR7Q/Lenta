@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.presenter;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -7,6 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+
+import com.example.slava.lenta2.RvAdapter;
+import com.example.slava.lenta2.model.Data;
+import com.example.slava.lenta2.model.LentaClient;
+import com.example.slava.lenta2.view.OneFragment;
 
 import java.util.List;
 
@@ -24,7 +29,7 @@ public class FPresenter implements Parcelable{
 
 
 
-    interface FragListener{
+    public interface FragListener{
         RecyclerView getRec();
         Context getCtx();
         String getTitle();

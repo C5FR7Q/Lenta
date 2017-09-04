@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.model;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;

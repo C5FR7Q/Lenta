@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.model;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

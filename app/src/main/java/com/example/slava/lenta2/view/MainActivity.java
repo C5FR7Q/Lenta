@@ -1,9 +1,12 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.view;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
+
+import com.example.slava.lenta2.presenter.MainPresenter;
+import com.example.slava.lenta2.R;
 
 public class MainActivity extends AppCompatActivity implements MainPresenter.MActToMPres {
 
