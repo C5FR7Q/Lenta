@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.client;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Path;

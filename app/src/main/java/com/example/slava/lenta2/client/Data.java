@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.client;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -47,7 +47,7 @@ public class Data {
     }
 
     public String getPubDate() {
-        return pubDate;
+        return pubDate.substring(0, pubDate.length() - 5);
     }
 
     public String getCategory() {

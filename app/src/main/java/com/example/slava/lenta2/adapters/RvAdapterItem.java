@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,53 +11,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.slava.lenta2.R;
+import com.example.slava.lenta2.client.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by slava on 29.08.2017.
  */
 
-public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
-    public static final int COUNT = 4;
-    private boolean includeDesc;
+public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder> {
     private List<Data> datas = new ArrayList<>();
-    private int size;
-    private int cutSize;
-    private int fulSize;
-    private Context context;
 
-    public RvAdapter(Context context, Observable<List<Data>> datas, boolean includeDescription) {
-        this.context = context;
-        this.includeDesc = includeDescription;
-        datas.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
-                    this.datas = data;
-                    this.cutSize = COUNT;
-                    this.size = cutSize;
-                    fulSize = data.size();
-                    notifyDataSetChanged();
-                });
+    public RvAdapterItem(List<Data> datas) {
+        this.datas = datas;
     }
-
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_half1, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.inside_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Data data = datas.get(position);
-        holder.tvArticleDate.setText(data.getPubDate().substring(0, data.getPubDate().length() - 5));
+        holder.tvArticleDate.setText(data.getPubDate());
         holder.tvArticleTitle.setText(data.getTitle());
 //        if (includeDesc)
             holder.tvArticleBody.setText(data.getDescription());

@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.client;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -48,6 +48,18 @@ public class LentaClient {
         return lentaApi
                 .getAll()
                 .flatMap(seed -> Observable.just(seed.getData()));
+    }
+
+    public Observable<List<Data>> get(int i){
+        switch (i){
+            case 0:
+                return getHottest();
+            case 1:
+                return getNewest();
+            case 2:
+                return getAll();
+        }
+        return null;
     }
 
 }
