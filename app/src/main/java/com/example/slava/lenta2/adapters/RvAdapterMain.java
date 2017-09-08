@@ -17,6 +17,9 @@ import com.example.slava.lenta2.views.fragment_main.presenter.IFragmentPresenter
 
 import java.util.ArrayList;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * Created by slava on 29.08.2017.
  */
@@ -55,6 +58,8 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
         }
         LentaClient.getInstance()
                 .get(position)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(datas -> holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener)));
     }
 

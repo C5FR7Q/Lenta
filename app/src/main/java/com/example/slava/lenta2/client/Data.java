@@ -23,12 +23,12 @@ public class Data {
     @Element(name = "pubDate")
     private String pubDate;
 
-    @Element(name = "category")
-    private String category;
-
     @Path(value = "enclosure")
     @Attribute(name = "url")
     private String picLink;
+
+    @Element(name = "category", required = false)
+    private String category;
 
     public String getPicLink() {
         return picLink;

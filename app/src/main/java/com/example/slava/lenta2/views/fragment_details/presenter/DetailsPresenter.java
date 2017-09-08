@@ -10,6 +10,7 @@ import com.example.slava.lenta2.client.LentaClient;
 import com.example.slava.lenta2.views.activity.presenter.IMainPresenter;
 import com.example.slava.lenta2.views.fragment_details.view.IDetailsFragmentView;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -30,6 +31,7 @@ public class DetailsPresenter implements IDetailsPresenter {
                 LentaClient.getInstance()
                         .get(i)
                         .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(datas -> {
                            mainPresenter.hideProgressDialog();
                             detailsFragmentView.setAdapter(new RvAdapterItem(datas, true, true, this));

@@ -1,6 +1,5 @@
 package com.example.slava.lenta2.views.activity.view;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -18,10 +17,8 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        progressDialog = (ProgressDialog) new AlertDialog.Builder(this)
-                .setMessage("Loading data")
-                .setCancelable(false)
-                .create();
+        progressDialog = new ProgressDialog(this.getApplicationContext());
+        progressDialog.setMessage("Loading");
         presenter = new MainPresenter(this);
 
     }

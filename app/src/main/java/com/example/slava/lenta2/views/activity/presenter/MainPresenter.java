@@ -2,6 +2,7 @@ package com.example.slava.lenta2.views.activity.presenter;
 
 
 import android.app.Fragment;
+import android.os.Parcel;
 
 import com.example.slava.lenta2.views.activity.view.IMainView;
 import com.example.slava.lenta2.views.fragment_main.view.MainFragment;
@@ -52,5 +53,15 @@ public class MainPresenter implements IMainPresenter {
     @Override
     public void showHomeButton(boolean isShowing, String title) {
         mainView.showHomeButton(isShowing, title);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

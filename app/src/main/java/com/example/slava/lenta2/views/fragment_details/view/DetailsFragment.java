@@ -26,7 +26,7 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
     public static DetailsFragment getInstance(String title, IMainPresenter mainPresenter) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.MAIN_PRESENTER, mainPresenter);
+        bundle.putParcelable(Constants.MAIN_PRESENTER, mainPresenter);
         bundle.putString(Constants.TITLE, title);
         return fragment;
     }
@@ -34,7 +34,7 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getSerializable(Constants.MAIN_PRESENTER);
+        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(Constants.MAIN_PRESENTER);
         String title = getArguments().getString(Constants.TITLE);
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);

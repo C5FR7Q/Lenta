@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class MainFragment extends Fragment implements IFragmentView{
     public static Fragment getInstance(IMainPresenter mainPresenter) {
         MainFragment fragment = new MainFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.MAIN_PRESENTER, mainPresenter);
+        bundle.putParcelable(Constants.MAIN_PRESENTER, mainPresenter);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -35,6 +36,7 @@ public class MainFragment extends Fragment implements IFragmentView{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         IMainPresenter mainPresenter = (IMainPresenter) getArguments().getSerializable(Constants.MAIN_PRESENTER);
+        Log.d("MainFragment", "(mainPresenter == null):" + (mainPresenter == null));
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
