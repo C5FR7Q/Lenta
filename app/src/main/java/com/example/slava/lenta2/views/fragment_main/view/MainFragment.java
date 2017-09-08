@@ -35,8 +35,7 @@ public class MainFragment extends Fragment implements IFragmentView{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getSerializable(Constants.MAIN_PRESENTER);
-        Log.d("MainFragment", "(mainPresenter == null):" + (mainPresenter == null));
+        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(Constants.MAIN_PRESENTER);
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
