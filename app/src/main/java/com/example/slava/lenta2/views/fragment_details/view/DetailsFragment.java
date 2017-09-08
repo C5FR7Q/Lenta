@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +25,12 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
     private RecyclerView recyclerView;
 
     public static DetailsFragment getInstance(String title, IMainPresenter mainPresenter) {
+        Log.d("DetailsFragment", "mainPresenter == null:" + (mainPresenter == null));
         DetailsFragment fragment = new DetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.MAIN_PRESENTER, mainPresenter);
         bundle.putString(Constants.TITLE, title);
+        fragment.setArguments(bundle);
         return fragment;
     }
 

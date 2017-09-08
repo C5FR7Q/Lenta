@@ -38,17 +38,23 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        presenter.onBackPressed();
+        presenter.onBackPressed();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
     public void showProgressDialog() {
-        progressDialog.show();
+//        progressDialog.show();
     }
 
     @Override
     public void hideProgressDialog() {
-        progressDialog.dismiss();
+//        progressDialog.dismiss();
     }
 
     @Override
@@ -59,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void replaceFragment(Fragment fragment){
-        getFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction().addToBackStack(null)
                 .replace(R.id.container, fragment)
                 .commit();
     }

@@ -32,7 +32,7 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void onBackPressed() {
-
+        mainView.showHomeButton(false, "Lenta");
     }
 
     @Override
