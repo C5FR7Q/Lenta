@@ -1,6 +1,8 @@
 package com.example.slava.lenta2.adapters;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.slava.lenta2.Constants;
+import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 import com.example.slava.lenta2.R;
+import com.example.slava.lenta2.client.LentaClient;
+import com.example.slava.lenta2.views.fragment_main.presenter.IFragmentPresenter;
 
 import java.util.ArrayList;
 
@@ -17,12 +22,16 @@ import java.util.ArrayList;
  */
 
 public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder> {
-    private final ArrayList<View.OnClickListener> listeners;
     private final ArrayList<String> titles;
+    private final IFragmentPresenter fragmentPresenter;
+    private final OnRecyclerViewItemSelected insideListener;
 
-    public RvAdapterMain(ArrayList<String> titles, ArrayList<View.OnClickListener> listeners) {
+    public RvAdapterMain(ArrayList<String> titles,
+                         IFragmentPresenter fragmentPresenter,
+                         OnRecyclerViewItemSelected insideListener) {
         this.titles = titles;
-        this.listeners = listeners;
+        this.fragmentPresenter = fragmentPresenter;
+        this.insideListener = insideListener;
     }
 
     @Override
@@ -33,8 +42,20 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        final boolean includeDesc;
         holder.tvTitle.setText(titles.get(0));
-        holder.btnView.setOnClickListener(listeners.get(0));
+        holder.btnView.setOnClickListener(v -> fragmentPresenter.onViewClicked(position));
+        if (position == 0){
+            holder.rv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+            includeDesc = true;
+        }
+        else {
+            holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+            includeDesc = false;
+        }
+        LentaClient.getInstance()
+                .get(position)
+                .subscribe(datas -> holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener)));
     }
 
     @Override

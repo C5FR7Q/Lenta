@@ -1,6 +1,8 @@
 package com.example.slava.lenta2.views.fragment_main.presenter;
 
-import android.view.View;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.example.slava.lenta2.Constants;
 import com.example.slava.lenta2.adapters.RvAdapterMain;
@@ -22,30 +24,27 @@ public class FragmentPresenter implements IFragmentPresenter{
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
         ArrayList<String> titles = initTitles();
-        ArrayList<View.OnClickListener> listeners = initListeners();
-        fragmentView.setAdapter(new RvAdapterMain(titles, listeners));
+        fragmentView.setAdapter(new RvAdapterMain(titles, this, this));
     }
 
     private ArrayList<String> initTitles() {
         return Constants.getTitles();
     }
 
-    private ArrayList<View.OnClickListener> initListeners() {
-        ArrayList<View.OnClickListener> listeners = new ArrayList<>();
-        for (int i = 0; i < 3;i ++){
-            int finalI = i;
-            listeners.add(v -> onViewButtonClicked(finalI));
-        }
-        return listeners;
-    }
-
     @Override
-    public void onViewButtonClicked(int i){
+    public void onViewClicked(int position) {
         if (mainPresenter != null){
-            String title = initTitles().get(i);
+            String title = initTitles().get(position);
             mainPresenter.replaceFragment(DetailsFragment.getInstance(title, mainPresenter));
             mainPresenter.showHomeButton(true, title);
         }
     }
 
+    @Override
+    public void onSelect(String link, Context context) {
+        context.startActivity(new Intent()
+                .setAction(Intent.ACTION_VIEW)
+                .setData(Uri.parse(link))
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
 }

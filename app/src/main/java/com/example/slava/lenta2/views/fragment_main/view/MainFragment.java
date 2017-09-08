@@ -3,6 +3,7 @@ package com.example.slava.lenta2.views.fragment_main.view;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class MainFragment extends Fragment implements IFragmentView{
         IMainPresenter mainPresenter = (IMainPresenter) getArguments().getSerializable(Constants.MAIN_PRESENTER);
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
+        recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         fragmentPresenter = new FragmentPresenter(this, mainPresenter);
         return view;
     }
