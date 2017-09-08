@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        progressDialog = new ProgressDialog(this.getApplicationContext());
-        progressDialog.setMessage("Loading");
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading data");
         presenter = new MainPresenter(this);
 
     }
@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void showProgressDialog() {
-//        progressDialog.show();
+        progressDialog.show();
     }
 
     @Override
     public void hideProgressDialog() {
-//        progressDialog.dismiss();
+        progressDialog.dismiss();
     }
 
     @Override
