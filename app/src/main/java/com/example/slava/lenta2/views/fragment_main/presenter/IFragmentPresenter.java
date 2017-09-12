@@ -8,4 +8,6 @@ import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 
 public interface IFragmentPresenter extends OnRecyclerViewItemSelected{
     void onViewClicked(int position);
+
+    void onCreateView();
 }

@@ -31,14 +31,20 @@ public class MainFragment extends Fragment implements IFragmentView{
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(Constants.MAIN_PRESENTER);
+        fragmentPresenter = new FragmentPresenter(this, mainPresenter);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(Constants.MAIN_PRESENTER);
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        fragmentPresenter = new FragmentPresenter(this, mainPresenter);
+        fragmentPresenter.onCreateView();
         return view;
     }
 

@@ -3,6 +3,7 @@ package com.example.slava.lenta2.adapters;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,11 @@ import android.widget.TextView;
 import com.example.slava.lenta2.Constants;
 import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.client.LentaClient;
+import com.example.slava.lenta2.client.Data;
 import com.example.slava.lenta2.views.fragment_main.presenter.IFragmentPresenter;
 
 import java.util.ArrayList;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import java.util.List;
 
 /**
  * Created by slava on 29.08.2017.
@@ -28,13 +27,17 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
     private final ArrayList<String> titles;
     private final IFragmentPresenter fragmentPresenter;
     private final OnRecyclerViewItemSelected insideListener;
+    private List<List<Data>> datas;
 
     public RvAdapterMain(ArrayList<String> titles,
                          IFragmentPresenter fragmentPresenter,
-                         OnRecyclerViewItemSelected insideListener) {
+                         OnRecyclerViewItemSelected insideListener,
+                         List<List<Data>> datas) {
         this.titles = titles;
         this.fragmentPresenter = fragmentPresenter;
         this.insideListener = insideListener;
+        Log.d("RvAdapterMain", "New instance1");
+        this.datas = datas;
     }
 
     @Override
@@ -45,8 +48,9 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Log.d("RvAdapterMain", "ADAPTER BINDING");
         final boolean includeDesc;
-        holder.tvTitle.setText(titles.get(0));
+        holder.tvTitle.setText(titles.get(position));
         holder.btnView.setOnClickListener(v -> fragmentPresenter.onViewClicked(position));
         if (position == 0){
             holder.rv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
@@ -56,11 +60,12 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
             holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             includeDesc = false;
         }
-        LentaClient.getInstance()
-                .get(position)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(datas -> holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener)));
+        holder.rv.setAdapter(new RvAdapterItem(datas.get(position), includeDesc, false, insideListener));
+//        LentaClient.getInstance()
+//                .get(position)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(datas -> holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener)));
     }
 
     @Override
