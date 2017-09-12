@@ -14,10 +14,14 @@ import com.example.slava.lenta2.Constants;
 import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.client.Data;
+import com.example.slava.lenta2.client.LentaClient;
 import com.example.slava.lenta2.views.fragment_main.presenter.IFragmentPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by slava on 29.08.2017.
@@ -31,13 +35,11 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
 
     public RvAdapterMain(ArrayList<String> titles,
                          IFragmentPresenter fragmentPresenter,
-                         OnRecyclerViewItemSelected insideListener,
-                         List<List<Data>> datas) {
+                         OnRecyclerViewItemSelected insideListener) {
         this.titles = titles;
         this.fragmentPresenter = fragmentPresenter;
         this.insideListener = insideListener;
-        Log.d("RvAdapterMain", "New instance1");
-        this.datas = datas;
+        this.datas = new ArrayList<>();
     }
 
     @Override
@@ -48,7 +50,6 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d("RvAdapterMain", "ADAPTER BINDING");
         final boolean includeDesc;
         holder.tvTitle.setText(titles.get(position));
         holder.btnView.setOnClickListener(v -> fragmentPresenter.onViewClicked(position));
@@ -60,12 +61,17 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
             holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             includeDesc = false;
         }
-        holder.rv.setAdapter(new RvAdapterItem(datas.get(position), includeDesc, false, insideListener));
-//        LentaClient.getInstance()
-//                .get(position)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(datas -> holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener)));
+        if (datas.size() <= position) {
+            LentaClient.getInstance()
+                    .get(position)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(dataz -> {
+                        holder.rv.setAdapter(new RvAdapterItem(dataz, includeDesc, false, insideListener));
+                        datas.add(dataz);
+                    });
+        }
+        else holder.rv.setAdapter(new RvAdapterItem(datas.get(position), includeDesc, false, insideListener));
     }
 
     @Override

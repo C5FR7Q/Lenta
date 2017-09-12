@@ -7,18 +7,11 @@ import android.util.Log;
 
 import com.example.slava.lenta2.Constants;
 import com.example.slava.lenta2.adapters.RvAdapterMain;
-import com.example.slava.lenta2.client.Data;
-import com.example.slava.lenta2.client.LentaClient;
 import com.example.slava.lenta2.views.activity.presenter.IMainPresenter;
 import com.example.slava.lenta2.views.fragment_details.view.DetailsFragment;
 import com.example.slava.lenta2.views.fragment_main.view.IFragmentView;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by slava on 06.09.2017.
@@ -33,26 +26,7 @@ public class FragmentPresenter implements IFragmentPresenter{
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
         ArrayList<String> titles = initTitles();
-        Observable.zip(
-                            LentaClient.getInstance().get(0),
-                            LentaClient.getInstance().get(1),
-                            LentaClient.getInstance().get(2),
-                            (datas1, datas2, datas3) -> {
-                                List<List<Data>> datas = new ArrayList<>();
-                                datas.add(datas1);
-                                datas.add(datas2);
-                                datas.add(datas3);
-                                return datas;
-                            }
-                        )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(lists -> {
-                    adapter = new RvAdapterMain(titles, this, this, lists);
-                    fragmentView.setAdapter(adapter);
-                });
-        Log.d("FragmentPresenter", "PRESENTER CREATED");
-
+        adapter = new RvAdapterMain(titles, this, this);
     }
 
     private ArrayList<String> initTitles() {
