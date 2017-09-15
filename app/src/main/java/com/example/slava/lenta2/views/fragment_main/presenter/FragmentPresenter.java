@@ -3,10 +3,11 @@ package com.example.slava.lenta2.views.fragment_main.presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
-import com.example.slava.lenta2.Constants;
 import com.example.slava.lenta2.adapters.RvAdapterMain;
+import com.example.slava.lenta2.model.data_client.LentaClient;
+import com.example.slava.lenta2.model.titles_client.ITitlesClient;
+import com.example.slava.lenta2.model.titles_client.TitlesClient;
 import com.example.slava.lenta2.views.activity.presenter.IMainPresenter;
 import com.example.slava.lenta2.views.fragment_details.view.DetailsFragment;
 import com.example.slava.lenta2.views.fragment_main.view.IFragmentView;
@@ -21,16 +22,21 @@ public class FragmentPresenter implements IFragmentPresenter{
     private RvAdapterMain adapter;
     private IFragmentView fragmentView;
     private IMainPresenter mainPresenter;
+    private ITitlesClient titlesClient;
 
-    public FragmentPresenter(IFragmentView fragmentView, IMainPresenter mainPresenter) {
+    public FragmentPresenter(IFragmentView fragmentView,
+                             IMainPresenter mainPresenter,
+                             ITitlesClient titlesClient,
+                             LentaClient lentaClient) {
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
+        this.titlesClient = titlesClient;
         ArrayList<String> titles = initTitles();
-        adapter = new RvAdapterMain(titles, this, this);
+        adapter = new RvAdapterMain(titles, this, this, new TitlesClient(), lentaClient);
     }
 
     private ArrayList<String> initTitles() {
-        return Constants.getTitles();
+        return titlesClient.getTitles();
     }
 
 

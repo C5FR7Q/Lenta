@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.example.slava.lenta2.Constants;
 import com.example.slava.lenta2.adapters.RvAdapterItem;
-import com.example.slava.lenta2.client.LentaClient;
+import com.example.slava.lenta2.model.data_client.LentaClient;
+import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.views.activity.presenter.IMainPresenter;
 import com.example.slava.lenta2.views.fragment_details.view.IDetailsFragmentView;
 
@@ -21,14 +21,18 @@ public class DetailsPresenter implements IDetailsPresenter {
     private IDetailsFragmentView detailsFragmentView;
     private IMainPresenter mainPresenter;
 
-    public DetailsPresenter(IDetailsFragmentView detailsFragmentView, IMainPresenter mainPresenter, String titile) {
+    public DetailsPresenter(IDetailsFragmentView detailsFragmentView,
+                            IMainPresenter mainPresenter,
+                            String titile,
+                            ITitlesClient titlesClient,
+                            LentaClient lentaClient) {
         this.detailsFragmentView = detailsFragmentView;
         this.mainPresenter = mainPresenter;
 
         mainPresenter.showProgressDialog();
-        for (int i = 0; i < Constants.getTitles().size(); i++){
-            if (Constants.getTitles().get(i).equals(titile))
-                LentaClient.getInstance()
+        for (int i = 0; i < titlesClient.getTitles().size(); i++){
+            if (titlesClient.getTitles().get(i).equals(titile))
+                lentaClient
                         .get(i)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

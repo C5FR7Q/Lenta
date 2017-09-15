@@ -1,4 +1,4 @@
-package com.example.slava.lenta2;
+package com.example.slava.lenta2.model.titles_client;
 
 import java.util.ArrayList;
 
@@ -6,10 +6,14 @@ import java.util.ArrayList;
  * Created by slava on 07.09.2017.
  */
 
-public class Constants {
-    public static final String MAIN_PRESENTER = "main_presenter";
-    public static final String TITLE = "title";
-    public static ArrayList<String> getTitles(){
+public class TitlesClient implements ITitlesClient {
+
+    public TitlesClient() {
+
+    }
+
+    @Override
+    public ArrayList<String> getTitles(){
         ArrayList<String> titles = new ArrayList<>();
         titles.add("Hottest news");
         titles.add("Latest news");

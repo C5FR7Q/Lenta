@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.client.Data;
+import com.example.slava.lenta2.model.data_client.Data;
 
 import java.util.ArrayList;
 import java.util.List;

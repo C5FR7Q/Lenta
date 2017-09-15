@@ -1,4 +1,4 @@
-package com.example.slava.lenta2.client;
+package com.example.slava.lenta2.model.data_client;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

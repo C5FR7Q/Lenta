@@ -1,4 +1,4 @@
-package com.example.slava.lenta2.client;
+package com.example.slava.lenta2.model.data_client;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 

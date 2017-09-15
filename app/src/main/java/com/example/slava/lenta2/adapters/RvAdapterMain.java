@@ -3,18 +3,17 @@ package com.example.slava.lenta2.adapters;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.slava.lenta2.Constants;
 import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.client.Data;
-import com.example.slava.lenta2.client.LentaClient;
+import com.example.slava.lenta2.model.data_client.Data;
+import com.example.slava.lenta2.model.data_client.LentaClient;
+import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.views.fragment_main.presenter.IFragmentPresenter;
 
 import java.util.ArrayList;
@@ -32,14 +31,20 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
     private final IFragmentPresenter fragmentPresenter;
     private final OnRecyclerViewItemSelected insideListener;
     private List<List<Data>> datas;
+    private ITitlesClient titlesClient;
+    private LentaClient lentaClient;
 
     public RvAdapterMain(ArrayList<String> titles,
                          IFragmentPresenter fragmentPresenter,
-                         OnRecyclerViewItemSelected insideListener) {
+                         OnRecyclerViewItemSelected insideListener,
+                         ITitlesClient titlesClient,
+                         LentaClient lentaClient) {
         this.titles = titles;
         this.fragmentPresenter = fragmentPresenter;
         this.insideListener = insideListener;
         this.datas = new ArrayList<>();
+        this.titlesClient = titlesClient;
+        this.lentaClient = lentaClient;
     }
 
     @Override
@@ -62,7 +67,7 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
             includeDesc = false;
         }
         if (datas.size() <= position) {
-            LentaClient.getInstance()
+            lentaClient
                     .get(position)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -76,7 +81,7 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
 
     @Override
     public int getItemCount() {
-        return Constants.getTitles().size();
+        return titlesClient.getTitles().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
