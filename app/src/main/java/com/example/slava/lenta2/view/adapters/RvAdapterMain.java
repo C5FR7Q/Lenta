@@ -1,4 +1,4 @@
-package com.example.slava.lenta2.adapters;
+package com.example.slava.lenta2.view.adapters;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
-import com.example.slava.lenta2.views.fragment_main.presenter.IFragmentPresenter;
+import com.example.slava.lenta2.presenter.IFragmentPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +28,14 @@ import io.reactivex.schedulers.Schedulers;
 public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder> {
     private final ArrayList<String> titles;
     private final IFragmentPresenter fragmentPresenter;
-    private final OnRecyclerViewItemSelected insideListener;
+    private final RvAdapterItem.OnItemSelectedListener insideListener;
     private List<List<Data>> datas;
     private ITitlesClient titlesClient;
     private LentaClient lentaClient;
 
     public RvAdapterMain(ArrayList<String> titles,
                          IFragmentPresenter fragmentPresenter,
-                         OnRecyclerViewItemSelected insideListener,
+                         RvAdapterItem.OnItemSelectedListener insideListener,
                          ITitlesClient titlesClient,
                          LentaClient lentaClient) {
         this.titles = titles;

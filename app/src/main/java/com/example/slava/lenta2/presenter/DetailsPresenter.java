@@ -1,14 +1,13 @@
-package com.example.slava.lenta2.views.fragment_details.presenter;
+package com.example.slava.lenta2.presenter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.example.slava.lenta2.adapters.RvAdapterItem;
+import com.example.slava.lenta2.view.adapters.RvAdapterItem;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
-import com.example.slava.lenta2.views.activity.presenter.IMainPresenter;
-import com.example.slava.lenta2.views.fragment_details.view.IDetailsFragmentView;
+import com.example.slava.lenta2.view.fragment.IDetailsFragmentView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

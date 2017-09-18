@@ -1,4 +1,4 @@
-package com.example.slava.lenta2.views.activity.view;
+package com.example.slava.lenta2.view.activity;
 
 import android.app.Fragment;
 

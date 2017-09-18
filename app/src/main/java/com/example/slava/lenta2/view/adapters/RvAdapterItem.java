@@ -1,5 +1,6 @@
-package com.example.slava.lenta2.adapters;
+package com.example.slava.lenta2.view.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.slava.lenta2.OnRecyclerViewItemSelected;
 import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.Data;
 
@@ -20,15 +20,18 @@ import java.util.List;
  */
 
 public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder> {
+    public interface OnItemSelectedListener{
+        void onSelect(String link, Context context);
+    }
     private final boolean includeDesc;
-    private final OnRecyclerViewItemSelected listener;
+    private final OnItemSelectedListener listener;
     private final boolean isFullSized;
     private List<Data> datas = new ArrayList<>();
 
     public RvAdapterItem(List<Data> datas,
                          boolean includeDesc,
                          boolean isFullSized,
-                         OnRecyclerViewItemSelected listener) {
+                         OnItemSelectedListener listener) {
         this.datas = datas;
         this.includeDesc = includeDesc;
         this.listener = listener;

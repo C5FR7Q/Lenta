@@ -1,4 +1,4 @@
-package com.example.slava.lenta2.views.activity.view;
+package com.example.slava.lenta2.view.activity;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.views.activity.presenter.IMainPresenter;
-import com.example.slava.lenta2.views.activity.presenter.MainPresenter;
+import com.example.slava.lenta2.presenter.IMainPresenter;
+import com.example.slava.lenta2.presenter.MainPresenter;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
     private IMainPresenter presenter;

@@ -1,16 +1,15 @@
-package com.example.slava.lenta2.views.fragment_main.presenter;
+package com.example.slava.lenta2.presenter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.example.slava.lenta2.adapters.RvAdapterMain;
+import com.example.slava.lenta2.view.adapters.RvAdapterMain;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
-import com.example.slava.lenta2.views.activity.presenter.IMainPresenter;
-import com.example.slava.lenta2.views.fragment_details.view.DetailsFragment;
-import com.example.slava.lenta2.views.fragment_main.view.IFragmentView;
+import com.example.slava.lenta2.view.fragment.DetailsFragment;
+import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
 import java.util.ArrayList;
 
@@ -20,11 +19,11 @@ import java.util.ArrayList;
 
 public class FragmentPresenter implements IFragmentPresenter{
     private RvAdapterMain adapter;
-    private IFragmentView fragmentView;
+    private IMainFragmentView fragmentView;
     private IMainPresenter mainPresenter;
     private ITitlesClient titlesClient;
 
-    public FragmentPresenter(IFragmentView fragmentView,
+    public FragmentPresenter(IMainFragmentView fragmentView,
                              IMainPresenter mainPresenter,
                              ITitlesClient titlesClient,
                              LentaClient lentaClient) {

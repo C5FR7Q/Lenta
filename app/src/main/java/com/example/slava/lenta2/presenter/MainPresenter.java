@@ -1,11 +1,11 @@
-package com.example.slava.lenta2.views.activity.presenter;
+package com.example.slava.lenta2.presenter;
 
 
 import android.app.Fragment;
 import android.os.Parcel;
 
-import com.example.slava.lenta2.views.activity.view.IMainView;
-import com.example.slava.lenta2.views.fragment_main.view.MainFragment;
+import com.example.slava.lenta2.view.activity.IMainView;
+import com.example.slava.lenta2.view.fragment.MainFragment;
 
 /**
  * Created by slava on 06.09.2017.

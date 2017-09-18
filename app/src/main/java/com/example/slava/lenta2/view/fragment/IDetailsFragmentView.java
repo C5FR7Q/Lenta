@@ -1,4 +1,4 @@
-package com.example.slava.lenta2.views.fragment_details.view;
+package com.example.slava.lenta2.view.fragment;
 
 import android.support.v7.widget.RecyclerView;
 

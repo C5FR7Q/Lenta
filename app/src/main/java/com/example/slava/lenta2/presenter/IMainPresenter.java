@@ -1,4 +1,4 @@
-package com.example.slava.lenta2.views.activity.presenter;
+package com.example.slava.lenta2.presenter;
 
 import android.app.Fragment;
 import android.os.Parcelable;
