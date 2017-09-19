@@ -1,6 +1,7 @@
 package com.example.slava.lenta2.view.activity;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -64,10 +65,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
     @Override
-    public void replaceFragment(Fragment fragment){
-        getFragmentManager().beginTransaction().addToBackStack(null)
-                .replace(R.id.container, fragment)
-                .commit();
+    public void replaceFragment(Fragment fragment, boolean addToBackStack){
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment);
+        if (addToBackStack)
+                fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

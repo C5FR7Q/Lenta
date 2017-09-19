@@ -11,7 +11,7 @@ public interface IMainPresenter extends Parcelable{
     void onResume();
     void onDestroy();
     void onBackPressed();
-    void replaceFragment(Fragment fragment);
+    void replaceFragment(Fragment fragment, boolean addToBackStack);
     void showProgressDialog();
     void hideProgressDialog();
     void showHomeButton(boolean isShowing, String title);

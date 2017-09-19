@@ -16,7 +16,7 @@ public class MainPresenter implements IMainPresenter {
 
     public MainPresenter(IMainView mainView) {
         this.mainView = mainView;
-        replaceFragment(MainFragment.getInstance(this));
+        replaceFragment(MainFragment.getInstance(this), false);
     }
 
 //    Fragments are ready
@@ -36,8 +36,8 @@ public class MainPresenter implements IMainPresenter {
     }
 
     @Override
-    public void replaceFragment(Fragment fragment) {
-        mainView.replaceFragment(fragment);
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        mainView.replaceFragment(fragment, addToBackStack);
     }
 
     @Override

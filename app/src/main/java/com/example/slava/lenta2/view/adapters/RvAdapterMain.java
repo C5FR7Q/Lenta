@@ -11,15 +11,10 @@ import android.widget.TextView;
 
 import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.Data;
-import com.example.slava.lenta2.model.data_client.LentaClient;
-import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.presenter.IFragmentPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by slava on 29.08.2017.
@@ -29,21 +24,14 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
     private final ArrayList<String> titles;
     private final IFragmentPresenter fragmentPresenter;
     private final RvAdapterItem.OnItemSelectedListener insideListener;
-    private List<List<Data>> datas;
-    private ITitlesClient titlesClient;
-    private LentaClient lentaClient;
+    private List<List<Data>> allDatas = new ArrayList<>();
 
     public RvAdapterMain(ArrayList<String> titles,
                          IFragmentPresenter fragmentPresenter,
-                         RvAdapterItem.OnItemSelectedListener insideListener,
-                         ITitlesClient titlesClient,
-                         LentaClient lentaClient) {
+                         RvAdapterItem.OnItemSelectedListener insideListener) {
         this.titles = titles;
         this.fragmentPresenter = fragmentPresenter;
         this.insideListener = insideListener;
-        this.datas = new ArrayList<>();
-        this.titlesClient = titlesClient;
-        this.lentaClient = lentaClient;
     }
 
     @Override
@@ -65,22 +53,33 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
             holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             includeDesc = false;
         }
-        if (datas.size() <= position) {
-            lentaClient
-                    .get(position)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(dataz -> {
-                        holder.rv.setAdapter(new RvAdapterItem(dataz, includeDesc, false, insideListener));
-                        datas.add(dataz);
-                    });
+        if (allDatas.size() <= position) {
+            fragmentPresenter.askDatas(holder, position, includeDesc, insideListener);
         }
-        else holder.rv.setAdapter(new RvAdapterItem(datas.get(position), includeDesc, false, insideListener));
+        else holder.rv.setAdapter(new RvAdapterItem(allDatas.get(position), includeDesc, false, insideListener));
+    }
+
+    public void setInsideAdapter(ViewHolder holder,
+                                  List<Data> datas,
+                                  boolean includeDesc,
+                                  RvAdapterItem.OnItemSelectedListener insideListener){
+        holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener));
     }
 
     @Override
     public int getItemCount() {
-        return titlesClient.getTitles().size();
+        return (titles == null) ? 0 : titles.size();
+    }
+
+    public void addDatas(List<Data> data){
+        if (isValid(data)){
+            this.allDatas.add(data);
+            notifyDataSetChanged();
+        }
+    }
+
+    private boolean isValid(List datas){
+        return !(datas == null || datas.isEmpty());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

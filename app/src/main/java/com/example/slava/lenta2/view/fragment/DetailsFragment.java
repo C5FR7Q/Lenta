@@ -37,15 +37,23 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String title = getArguments().getString(TITLE);
+        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(MAIN_PRESENTER);
+        presenter = new DetailsPresenter(this, mainPresenter, title, new TitlesClient(), LentaClient.getInstance());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(MAIN_PRESENTER);
-        String title = getArguments().getString(TITLE);
+
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        presenter = new DetailsPresenter(this, mainPresenter, title, new TitlesClient(), LentaClient.getInstance());
+        presenter.onCreateView();
+
         return view;
     }
 

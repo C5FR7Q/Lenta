@@ -44,13 +44,11 @@ public class FragmentPresenter implements IFragmentPresenter{
         return titlesClient.getTitles();
     }
 
-
-
     @Override
     public void onViewClicked(int position) {
         if (mainPresenter != null){
             String title = initTitles().get(position);
-            mainPresenter.replaceFragment(DetailsFragment.getInstance(title, mainPresenter));
+            mainPresenter.replaceFragment(DetailsFragment.getInstance(title, mainPresenter), true);
             mainPresenter.showHomeButton(true, title);
         }
     }

@@ -7,5 +7,5 @@ import com.example.slava.lenta2.view.adapters.RvAdapterItem;
  */
 
 public interface IDetailsPresenter extends RvAdapterItem.OnItemSelectedListener{
-
+    void onCreateView();
 }

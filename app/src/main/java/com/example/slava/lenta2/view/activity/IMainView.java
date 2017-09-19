@@ -7,7 +7,7 @@ import android.app.Fragment;
  */
 
 public interface IMainView {
-    void replaceFragment(Fragment fragment);
+    void replaceFragment(Fragment fragment, boolean addToBackStack);
     void showProgressDialog();
     void hideProgressDialog();
     void showHomeButton(boolean isShowing, String title);
