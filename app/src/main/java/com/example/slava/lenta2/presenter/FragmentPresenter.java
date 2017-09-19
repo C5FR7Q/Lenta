@@ -4,14 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.example.slava.lenta2.view.adapters.RvAdapterMain;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
-import com.example.slava.lenta2.model.titles_client.TitlesClient;
+import com.example.slava.lenta2.view.adapters.RvAdapterItem;
+import com.example.slava.lenta2.view.adapters.RvAdapterMain;
 import com.example.slava.lenta2.view.fragment.DetailsFragment;
 import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
 import java.util.ArrayList;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by slava on 06.09.2017.
@@ -22,6 +25,7 @@ public class FragmentPresenter implements IFragmentPresenter{
     private IMainFragmentView fragmentView;
     private IMainPresenter mainPresenter;
     private ITitlesClient titlesClient;
+    private LentaClient lentaClient;
 
     public FragmentPresenter(IMainFragmentView fragmentView,
                              IMainPresenter mainPresenter,
@@ -30,8 +34,10 @@ public class FragmentPresenter implements IFragmentPresenter{
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
         this.titlesClient = titlesClient;
+        this.lentaClient = lentaClient;
         ArrayList<String> titles = initTitles();
-        adapter = new RvAdapterMain(titles, this, this, new TitlesClient(), lentaClient);
+        RvAdapterItem.OnItemSelectedListener listener = this::onSelect;
+        adapter = new RvAdapterMain(titles, this, listener);
     }
 
     private ArrayList<String> initTitles() {
@@ -56,7 +62,18 @@ public class FragmentPresenter implements IFragmentPresenter{
     }
 
     @Override
-    public void onSelect(String link, Context context) {
+    public void askDatas(RvAdapterMain.ViewHolder holder, int position, boolean includeDesc, RvAdapterItem.OnItemSelectedListener insideListener) {
+        lentaClient
+                .get(position)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(dataz -> {
+                    adapter.setInsideAdapter(holder, dataz, includeDesc, insideListener);
+                    adapter.addDatas(dataz);
+                });
+    }
+
+    private void onSelect(String link, Context context) {
         context.startActivity(new Intent()
                 .setAction(Intent.ACTION_VIEW)
                 .setData(Uri.parse(link))
