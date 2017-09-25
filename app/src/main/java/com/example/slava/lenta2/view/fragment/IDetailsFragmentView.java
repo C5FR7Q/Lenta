@@ -8,4 +8,5 @@ import android.support.v7.widget.RecyclerView;
 
 public interface IDetailsFragmentView {
     void setAdapter(RecyclerView.Adapter adapter);
+    void browse(String link);
 }

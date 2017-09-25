@@ -1,6 +1,8 @@
 package com.example.slava.lenta2.view.fragment;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,6 +62,14 @@ public class MainFragment extends Fragment implements IMainFragmentView {
     @Override
     public void setAdapter(RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void browse(String link) {
+        getActivity().startActivity(new Intent()
+                .setAction(Intent.ACTION_VIEW)
+                .setData(Uri.parse(link))
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.slava.lenta2.view.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,7 @@ import java.util.List;
 
 public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder> {
     public interface OnItemSelectedListener{
-        void onSelect(String link, Context context);
+        void onSelect(String link);
     }
     private final boolean includeDesc;
     private final OnItemSelectedListener listener;
@@ -63,7 +62,7 @@ public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder
         }
         else holder.iv.setVisibility(View.GONE);
 
-        holder.itemView.setOnClickListener(v -> listener.onSelect(data.getLink(), holder.itemView.getContext()));
+        holder.itemView.setOnClickListener(v -> listener.onSelect(data.getLink()));
     }
 
     @Override

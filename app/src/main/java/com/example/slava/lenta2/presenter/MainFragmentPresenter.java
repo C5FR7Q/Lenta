@@ -1,8 +1,5 @@
 package com.example.slava.lenta2.presenter;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.example.slava.lenta2.model.data_client.Data;
@@ -86,10 +83,7 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
         };
     }
 
-    private void onSelect(String link, Context context) {
-        context.startActivity(new Intent()
-                .setAction(Intent.ACTION_VIEW)
-                .setData(Uri.parse(link))
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    private void onSelect(String link) {
+        fragmentView.browse(link);
     }
 }

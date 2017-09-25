@@ -1,9 +1,5 @@
 package com.example.slava.lenta2.presenter;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-
 import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
@@ -49,13 +45,6 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
         };
     }
 
-    public void browse(String link, Context context) {
-        context.startActivity(new Intent()
-                .setAction(Intent.ACTION_VIEW)
-                .setData(Uri.parse(link))
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
-
     @Override
     public void onCreateView() {
         mainPresenter.showProgressDialog();
@@ -71,9 +60,9 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
     }
 
     @Override
-    public void onSelect(String link, Context context) {
+    public void onSelect(String link) {
         if (link.matches("^https://lenta\\.ru.*$"))
-            browse(link, context);
+            detailsFragmentView.browse(link);
     }
 
     public CompositeDisposable getDisposables() {
