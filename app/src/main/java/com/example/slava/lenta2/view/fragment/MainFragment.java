@@ -13,8 +13,8 @@ import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
 import com.example.slava.lenta2.presenter.IMainPresenter;
-import com.example.slava.lenta2.presenter.FragmentPresenter;
-import com.example.slava.lenta2.presenter.IFragmentPresenter;
+import com.example.slava.lenta2.presenter.MainFragmentPresenter;
+import com.example.slava.lenta2.presenter.IMainFragmentPresenter;
 
 /**
  * Created by slava on 28.08.2017.
@@ -23,7 +23,7 @@ import com.example.slava.lenta2.presenter.IFragmentPresenter;
 public class MainFragment extends Fragment implements IMainFragmentView {
     private static final String MAIN_PRESENTER = "main_presenter";
     private RecyclerView recyclerView;
-    private IFragmentPresenter fragmentPresenter;
+    private IMainFragmentPresenter presenter;
 
     public static Fragment getInstance(IMainPresenter mainPresenter) {
         MainFragment fragment = new MainFragment();
@@ -36,8 +36,9 @@ public class MainFragment extends Fragment implements IMainFragmentView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(MAIN_PRESENTER);
-        fragmentPresenter = new FragmentPresenter(this, mainPresenter, new TitlesClient(), LentaClient.getInstance());
+        presenter = new MainFragmentPresenter(this, mainPresenter, new TitlesClient(), LentaClient.getInstance());
     }
 
     @Nullable
@@ -46,8 +47,14 @@ public class MainFragment extends Fragment implements IMainFragmentView {
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        fragmentPresenter.onCreateView();
+        presenter.onCreateView();
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override

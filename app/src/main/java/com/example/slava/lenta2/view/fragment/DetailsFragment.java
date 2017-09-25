@@ -14,8 +14,8 @@ import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
 import com.example.slava.lenta2.presenter.IMainPresenter;
-import com.example.slava.lenta2.presenter.DetailsPresenter;
-import com.example.slava.lenta2.presenter.IDetailsPresenter;
+import com.example.slava.lenta2.presenter.DetailsFragmentPresenter;
+import com.example.slava.lenta2.presenter.IDetailsFragmentPresenter;
 
 /**
  * Created by slava on 07.09.2017.
@@ -24,7 +24,7 @@ import com.example.slava.lenta2.presenter.IDetailsPresenter;
 public class DetailsFragment extends Fragment implements IDetailsFragmentView {
     private static final String MAIN_PRESENTER = "main_presenter";
     private static final String TITLE = "title";
-    private IDetailsPresenter presenter;
+    private IDetailsFragmentPresenter presenter;
     private RecyclerView recyclerView;
 
     public static DetailsFragment getInstance(String title, IMainPresenter mainPresenter) {
@@ -40,9 +40,10 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         String title = getArguments().getString(TITLE);
         IMainPresenter mainPresenter = (IMainPresenter) getArguments().getParcelable(MAIN_PRESENTER);
-        presenter = new DetailsPresenter(this, mainPresenter, title, new TitlesClient(), LentaClient.getInstance());
+        presenter = new DetailsFragmentPresenter(this, mainPresenter, title, new TitlesClient(), LentaClient.getInstance());
     }
 
     @Nullable
@@ -55,6 +56,12 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
         presenter.onCreateView();
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override

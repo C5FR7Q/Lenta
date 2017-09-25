@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.Data;
-import com.example.slava.lenta2.presenter.IFragmentPresenter;
+import com.example.slava.lenta2.presenter.IMainFragmentPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +22,12 @@ import java.util.List;
 
 public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder> {
     private final ArrayList<String> titles;
-    private final IFragmentPresenter fragmentPresenter;
+    private final IMainFragmentPresenter fragmentPresenter;
     private final RvAdapterItem.OnItemSelectedListener insideListener;
     private List<List<Data>> allDatas = new ArrayList<>();
 
     public RvAdapterMain(ArrayList<String> titles,
-                         IFragmentPresenter fragmentPresenter,
+                         IMainFragmentPresenter fragmentPresenter,
                          RvAdapterItem.OnItemSelectedListener insideListener) {
         this.titles = titles;
         this.fragmentPresenter = fragmentPresenter;

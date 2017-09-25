@@ -1,19 +1,10 @@
 package com.example.slava.lenta2.presenter;
 
-import com.example.slava.lenta2.view.adapters.RvAdapterItem;
-import com.example.slava.lenta2.view.adapters.RvAdapterMain;
-
 /**
- * Created by slava on 06.09.2017.
+ * Created by slava on 25.09.2017.
  */
 
-public interface IFragmentPresenter{
-    void onViewClicked(int position);
-
+public interface IFragmentPresenter {
     void onCreateView();
-
-    void askDatas(RvAdapterMain.ViewHolder holder,
-                  int position,
-                  boolean includeDesc,
-                  RvAdapterItem.OnItemSelectedListener insideListener);
+    void onDestroy();
 }

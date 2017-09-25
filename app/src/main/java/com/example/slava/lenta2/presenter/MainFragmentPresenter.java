@@ -3,7 +3,9 @@ package com.example.slava.lenta2.presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
+import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.view.adapters.RvAdapterItem;
@@ -12,25 +14,27 @@ import com.example.slava.lenta2.view.fragment.DetailsFragment;
 import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by slava on 06.09.2017.
  */
 
-public class FragmentPresenter implements IFragmentPresenter{
+public class MainFragmentPresenter implements IMainFragmentPresenter {
     private RvAdapterMain adapter;
     private IMainFragmentView fragmentView;
     private IMainPresenter mainPresenter;
     private ITitlesClient titlesClient;
     private LentaClient lentaClient;
+    private CompositeDisposable disposables = new CompositeDisposable();
 
-    public FragmentPresenter(IMainFragmentView fragmentView,
-                             IMainPresenter mainPresenter,
-                             ITitlesClient titlesClient,
-                             LentaClient lentaClient) {
+    public MainFragmentPresenter(IMainFragmentView fragmentView,
+                                 IMainPresenter mainPresenter,
+                                 ITitlesClient titlesClient,
+                                 LentaClient lentaClient) {
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
         this.titlesClient = titlesClient;
@@ -60,15 +64,26 @@ public class FragmentPresenter implements IFragmentPresenter{
     }
 
     @Override
-    public void askDatas(RvAdapterMain.ViewHolder holder, int position, boolean includeDesc, RvAdapterItem.OnItemSelectedListener insideListener) {
-        lentaClient
-                .get(position)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(dataz -> {
-                    adapter.setInsideAdapter(holder, dataz, includeDesc, insideListener);
-                    adapter.addDatas(dataz);
-                });
+    public void onDestroy() {
+        disposables.dispose();
+    }
+
+    @Override
+    public void askDatas(RvAdapterMain.ViewHolder holder,
+                         int position,
+                         boolean includeDesc,
+                         RvAdapterItem.OnItemSelectedListener insideListener) {
+        disposables.add(lentaClient.makeMagic(position, initConsumer(holder, includeDesc, insideListener)));
+    }
+
+    @NonNull
+    private Consumer<List<Data>> initConsumer(RvAdapterMain.ViewHolder holder,
+                                              boolean includeDesc,
+                                              RvAdapterItem.OnItemSelectedListener insideListener) {
+        return dataz -> {
+            adapter.setInsideAdapter(holder, dataz, includeDesc, insideListener);
+            adapter.addDatas(dataz);
+        };
     }
 
     private void onSelect(String link, Context context) {

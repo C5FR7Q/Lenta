@@ -5,6 +5,10 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
@@ -25,33 +29,33 @@ public class LentaClient {
         lentaApi = retrofit.create(LentaApi.class);
     }
 
-    public static LentaClient getInstance(){
+    public static LentaClient getInstance() {
         if (client != null)
             return client;
         client = new LentaClient();
         return client;
     }
 
-    public Observable<List<Data>> getHottest(){
+    private Observable<List<Data>> getHottest() {
         return lentaApi
                 .getHottest()
                 .flatMap(seed -> Observable.just(seed.getData()));
     }
 
-    public Observable<List<Data>> getNewest(){
+    private Observable<List<Data>> getNewest() {
         return lentaApi
                 .getNewest()
                 .flatMap(seed -> Observable.just(seed.getData()));
     }
 
-    public Observable<List<Data>> getAll(){
+    private Observable<List<Data>> getAll() {
         return lentaApi
                 .getAll()
                 .flatMap(seed -> Observable.just(seed.getData()));
     }
 
-    public Observable<List<Data>> get(int i){
-        switch (i){
+    private Observable<List<Data>> get(int i) {
+        switch (i) {
             case 0:
                 return getHottest();
             case 1:
@@ -60,6 +64,13 @@ public class LentaClient {
                 return getAll();
         }
         return null;
+    }
+
+    public Disposable makeMagic(int i, Consumer<List<Data>> listConsumer) {
+        return get(i)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(listConsumer);
     }
 
 }
