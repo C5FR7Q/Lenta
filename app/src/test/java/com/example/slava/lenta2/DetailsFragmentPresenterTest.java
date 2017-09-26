@@ -13,10 +13,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import io.reactivex.disposables.Disposable;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -28,20 +33,24 @@ public class DetailsFragmentPresenterTest {
     private DetailsFragmentPresenter presenter;
     private MainPresenter mockMainPresenter;
     private DetailsFragment mockDetailsView;
+    private LentaClient mockLentaClient;
 
     @Before
     public void setUp() throws Exception{
         mockMainPresenter = mock(MainPresenter.class);
         mockDetailsView = mock(DetailsFragment.class);
+        mockLentaClient = mock(LentaClient.class);
         presenter = new DetailsFragmentPresenter(mockDetailsView,
                 mockMainPresenter,
                 new TitlesClient().getTitles().get(0),
                 new TitlesClient(),
-                LentaClient.getInstance());
+                mockLentaClient);
     }
 
     @Test
     public void testOnCreateView(){
+        when(mockLentaClient.makeMagic(anyInt() % 3, any()))
+                .thenReturn(mock(Disposable.class));
         presenter.onCreateView();
         verify(mockMainPresenter, only()).showProgressDialog();
     }
