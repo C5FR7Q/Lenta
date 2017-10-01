@@ -43,7 +43,7 @@ public class DetailsFragmentPresenterTest {
     public void setUp() throws Exception {
         presenter = new DetailsFragmentPresenter(mockDetailsView,
                 mockMainPresenter,
-                new TitlesClient().getTitles().get(anyInt() % 3),
+                new TitlesClient().getTitles().get(0),
                 new TitlesClient(),
                 mockLentaClient,
                 new TestSchedulersProvider());
@@ -58,12 +58,6 @@ public class DetailsFragmentPresenterTest {
         verify(mockMainPresenter).showProgressDialog();
         verify(mockDetailsView, only()).showDatas(any(), any());
         verify(mockMainPresenter).hideProgressDialog();
-    }
-
-
-    @Test
-    public void testOnDestroy() {
-
     }
 
 //    Go next activity in case of right link.
