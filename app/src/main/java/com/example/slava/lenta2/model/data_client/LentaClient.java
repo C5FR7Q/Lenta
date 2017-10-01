@@ -32,19 +32,19 @@ public class LentaClient {
         return client;
     }
 
-    public Observable<List<Data>> getHottest(){
+    private Observable<List<Data>> getHottest(){
         return lentaApi
                 .getHottest()
                 .flatMap(seed -> Observable.just(seed.getData()));
     }
 
-    public Observable<List<Data>> getNewest(){
+    private Observable<List<Data>> getNewest(){
         return lentaApi
                 .getNewest()
                 .flatMap(seed -> Observable.just(seed.getData()));
     }
 
-    public Observable<List<Data>> getAll(){
+    private Observable<List<Data>> getAll(){
         return lentaApi
                 .getAll()
                 .flatMap(seed -> Observable.just(seed.getData()));
