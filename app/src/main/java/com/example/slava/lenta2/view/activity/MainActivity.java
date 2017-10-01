@@ -20,8 +20,10 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         setContentView(R.layout.activity_main);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading data");
-        presenter = new MainActivityPresenter(this);
-
+        if (getLastCustomNonConfigurationInstance() == null)
+            presenter = new MainActivityPresenter(this);
+        else presenter = (IMainActivityPresenter) getLastCustomNonConfigurationInstance();
+        presenter.onCreate(this);
     }
 
     @Override
@@ -40,6 +42,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     public void onBackPressed() {
         super.onBackPressed();
         presenter.onBackPressed();
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return presenter;
     }
 
     @Override

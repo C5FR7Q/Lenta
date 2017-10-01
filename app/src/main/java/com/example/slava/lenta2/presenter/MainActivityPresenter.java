@@ -12,11 +12,16 @@ import com.example.slava.lenta2.view.fragment.MainFragment;
  */
 
 public class MainActivityPresenter implements IMainActivityPresenter {
+    public static final String TITLE_MAIN = "Lenta";
     private IMainView mainView;
+    private boolean isShowing;
+    private String title;
 
-    public MainActivityPresenter(IMainView mainView) {
-        this.mainView = mainView;
+    public MainActivityPresenter(IMainView view) {
+        this.mainView = view;
         replaceFragment(MainFragment.getInstance(this), false);
+        isShowing = false;
+        title = TITLE_MAIN;
     }
 
 //    Fragments are ready
@@ -26,13 +31,19 @@ public class MainActivityPresenter implements IMainActivityPresenter {
     }
 
     @Override
+    public void onCreate(IMainView view) {
+        this.mainView = view;
+        showHomeButton(isShowing, title);
+    }
+
+    @Override
     public void onDestroy() {
         mainView = null;
     }
 
     @Override
     public void onBackPressed() {
-        mainView.showHomeButton(false, "Lenta");
+        mainView.showHomeButton(false, TITLE_MAIN);
     }
 
     @Override
@@ -53,6 +64,8 @@ public class MainActivityPresenter implements IMainActivityPresenter {
     @Override
     public void showHomeButton(boolean isShowing, String title) {
         mainView.showHomeButton(isShowing, title);
+        this.isShowing = isShowing;
+        this.title = title;
     }
 
     @Override
