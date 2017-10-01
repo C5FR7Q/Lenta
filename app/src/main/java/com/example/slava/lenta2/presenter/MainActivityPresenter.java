@@ -11,10 +11,10 @@ import com.example.slava.lenta2.view.fragment.MainFragment;
  * Created by slava on 06.09.2017.
  */
 
-public class MainPresenter implements IMainPresenter {
+public class MainActivityPresenter implements IMainActivityPresenter {
     private IMainView mainView;
 
-    public MainPresenter(IMainView mainView) {
+    public MainActivityPresenter(IMainView mainView) {
         this.mainView = mainView;
         replaceFragment(MainFragment.getInstance(this), false);
     }

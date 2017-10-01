@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by slava on 06.09.2017.
  */
 
-public interface IMainPresenter extends Parcelable{
+public interface IMainActivityPresenter extends Parcelable{
     void onResume();
     void onDestroy();
     void onBackPressed();

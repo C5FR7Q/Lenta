@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.presenter.IMainPresenter;
-import com.example.slava.lenta2.presenter.MainPresenter;
+import com.example.slava.lenta2.presenter.IMainActivityPresenter;
+import com.example.slava.lenta2.presenter.MainActivityPresenter;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
-    private IMainPresenter presenter;
+    private IMainActivityPresenter presenter;
     private ProgressDialog progressDialog;
 
     @Override
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         setContentView(R.layout.activity_main);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading data");
-        presenter = new MainPresenter(this);
+        presenter = new MainActivityPresenter(this);
 
     }
 

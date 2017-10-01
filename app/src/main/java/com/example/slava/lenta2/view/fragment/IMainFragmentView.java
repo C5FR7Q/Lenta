@@ -9,4 +9,5 @@ import android.support.v7.widget.RecyclerView;
 public interface IMainFragmentView {
     void setAdapter(RecyclerView.Adapter adapter);
 
+    void browse(String link);
 }
