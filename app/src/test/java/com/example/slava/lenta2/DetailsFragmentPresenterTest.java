@@ -56,6 +56,7 @@ public class DetailsFragmentPresenterTest {
                 .thenReturn(Observable.just(Collections.EMPTY_LIST));
         presenter.onCreateView(mock(Bundle.class), mockDetailsView);
         verify(mockMainPresenter).showProgressDialog();
+        verify(mockLentaClient, only()).get(anyInt() % 3);
         verify(mockDetailsView, only()).showDatas(any(), any());
         verify(mockMainPresenter).hideProgressDialog();
     }
