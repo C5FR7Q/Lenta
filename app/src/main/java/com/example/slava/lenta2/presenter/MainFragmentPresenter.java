@@ -2,6 +2,7 @@ package com.example.slava.lenta2.presenter;
 
 import android.os.Bundle;
 
+import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.SchedulersProvider;
@@ -11,6 +12,7 @@ import com.example.slava.lenta2.view.fragment.DetailsFragment;
 import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by slava on 06.09.2017.
@@ -74,6 +76,22 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     @Override
     public void onDestroyView() {
         this.fragmentView = null;
+    }
+
+    @Override
+    public void refresh() {
+        fragmentView.setRefreshing(true);
+        List<List<Data>> datas = new ArrayList<>();
+        for (int i = 0; i < 3; i++)
+            lentaClient
+                    .get(i)
+                    .subscribeOn(schedulers.io())
+                    .observeOn(schedulers.mainThread())
+                    .subscribe(datas::add, throwable -> {},
+                            () ->{
+                                fragmentView.setRefreshing(false);
+                                adapter.setAllDatas(datas);
+                            });
     }
 
     private void onSelect(String link) {

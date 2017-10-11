@@ -13,4 +13,5 @@ public interface IDetailsFragmentPresenter extends RvAdapterItem.OnItemSelectedL
     void onCreateView(Bundle savedInstanceState, IDetailsFragmentView view);
 
     void onDestroyView();
+    void refresh();
 }

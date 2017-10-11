@@ -21,4 +21,6 @@ public interface IMainFragmentPresenter {
                   RvAdapterItem.OnItemSelectedListener insideListener);
 
     void onDestroyView();
+
+    void refresh();
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class MainFragment extends Fragment implements IMainFragmentView {
     private static final String MAIN_PRESENTER = "main_presenter";
     private RecyclerView recyclerView;
     private IMainFragmentPresenter fragmentPresenter;
+    private SwipeRefreshLayout refreshLayout;
 
     public static Fragment getInstance(IMainActivityPresenter mainPresenter) {
         MainFragment fragment = new MainFragment();
@@ -54,7 +56,12 @@ public class MainFragment extends Fragment implements IMainFragmentView {
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+
         fragmentPresenter.onCreateView(savedInstanceState, this);
+
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeLayout);
+        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        refreshLayout.setOnRefreshListener(() -> fragmentPresenter.refresh());
         return view;
     }
 
@@ -67,6 +74,16 @@ public class MainFragment extends Fragment implements IMainFragmentView {
     @Override
     public void setAdapter(RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void setRefreshing(boolean isRefreshing) {
+        refreshLayout.setRefreshing(isRefreshing);
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        return refreshLayout.isRefreshing();
     }
 
     @Override

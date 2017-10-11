@@ -44,7 +44,7 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
     public void onCreateView(Bundle savedInstanceState, IDetailsFragmentView view) {
         this.detailsFragmentView = view;
         mainPresenter.showProgressDialog();
-        for (int i = 0; i < titlesClient.getTitles().size(); i++){
+        for (int i = 0; i < titlesClient.getTitles().size(); i++) {
             if (titlesClient.getTitles().get(i).equals(title))
                 lentaClient
                         .get(i)
@@ -60,5 +60,21 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
     @Override
     public void onDestroyView() {
         this.detailsFragmentView = null;
+    }
+
+    @Override
+    public void refresh() {
+        detailsFragmentView.setRefreshing(true);
+        for (int i = 0; i < titlesClient.getTitles().size(); i++) {
+            if (titlesClient.getTitles().get(i).equals(title))
+                lentaClient
+                        .get(i)
+                        .subscribeOn(schedulers.io())
+                        .observeOn(schedulers.mainThread())
+                        .subscribe(datas -> {
+                            detailsFragmentView.refreshDatas(datas);
+                            detailsFragmentView.setRefreshing(false);
+                        });
+        }
     }
 }

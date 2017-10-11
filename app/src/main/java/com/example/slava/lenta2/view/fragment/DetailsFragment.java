@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,8 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
     private static final String TITLE = "title";
     private IDetailsFragmentPresenter presenter;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout refreshLayout;
+    private RvAdapterItem adapter;
 
     public static DetailsFragment getInstance(String title, IMainActivityPresenter mainPresenter) {
         Log.d("DetailsFragment", "mainPresenter == null:" + (mainPresenter == null));
@@ -67,6 +70,10 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
         presenter.onCreateView(savedInstanceState, this);
 
+        refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeLayout);
+        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        refreshLayout.setOnRefreshListener(() -> presenter.refresh());
+
         return view;
     }
 
@@ -78,7 +85,13 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
 
     @Override
     public void showDatas(List<Data> datas, RvAdapterItem.OnItemSelectedListener listener) {
-        recyclerView.setAdapter(new RvAdapterItem(datas, true, true, listener));
+        adapter = new RvAdapterItem(datas, true, true, listener);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void refreshDatas(List<Data> datas) {
+        adapter.refreshDatas(datas);
     }
 
     @Override
@@ -87,5 +100,15 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
                 .setAction(Intent.ACTION_VIEW)
                 .setData(Uri.parse(link))
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+    }
+
+    @Override
+    public void setRefreshing(boolean isRefreshing) {
+        refreshLayout.setRefreshing(isRefreshing);
+    }
+
+    @Override
+    public boolean isRefreshing() {
+        return refreshLayout.isRefreshing();
     }
 }

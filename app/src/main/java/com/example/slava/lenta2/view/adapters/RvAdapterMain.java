@@ -78,6 +78,13 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
         }
     }
 
+    public void setAllDatas(List<List<Data>> datas){
+        if (isValid(datas)){
+            this.allDatas = datas;
+            notifyDataSetChanged();
+        }
+    }
+
     private boolean isValid(List datas){
         return !(datas == null || datas.isEmpty());
     }

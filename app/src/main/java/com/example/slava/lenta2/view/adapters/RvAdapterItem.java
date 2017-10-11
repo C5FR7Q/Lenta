@@ -20,13 +20,13 @@ import java.util.List;
 
 public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder> {
     public interface OnItemSelectedListener{
+
         void onSelect(String link);
     }
     private final boolean includeDesc;
     private final OnItemSelectedListener listener;
     private final boolean isFullSized;
     private List<Data> datas = new ArrayList<>();
-
     public RvAdapterItem(List<Data> datas,
                          boolean includeDesc,
                          boolean isFullSized,
@@ -70,6 +70,11 @@ public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder
         if (isFullSized)
             return datas.size();
         return 4;
+    }
+
+    public void refreshDatas(List<Data> datas) {
+        this.datas = datas;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
