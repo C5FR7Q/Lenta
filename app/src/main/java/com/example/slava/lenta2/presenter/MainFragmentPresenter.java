@@ -23,19 +23,19 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     private IMainActivityPresenter mainPresenter;
     private ITitlesClient titlesClient;
     private LentaClient lentaClient;
-    private IPostExecuteSchedulerProvider schedulers;
+    private IPostExecuteSchedulerProvider postExecuteSchedulerProvider;
     private CompositeDisposable disposables;
 
     public MainFragmentPresenter(IMainFragmentView fragmentView,
                                  IMainActivityPresenter mainPresenter,
                                  ITitlesClient titlesClient,
                                  LentaClient lentaClient,
-                                 IPostExecuteSchedulerProvider schedulers) {
+                                 IPostExecuteSchedulerProvider postExecuteSchedulerProvider) {
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
         this.titlesClient = titlesClient;
         this.lentaClient = lentaClient;
-        this.schedulers = schedulers;
+        this.postExecuteSchedulerProvider = postExecuteSchedulerProvider;
     }
 
     private ArrayList<String> initTitles() {
@@ -63,7 +63,7 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
         for (int i = 0; i < 3; i++)
             disposables.add(lentaClient
                     .get(i)
-                    .observeOn(schedulers.getScheduler())
+                    .observeOn(postExecuteSchedulerProvider.getScheduler())
                     .subscribe(datas::add, throwable -> {
                     }, () -> fragmentView.setDatas(datas)));
     }
@@ -88,7 +88,7 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
         for (int i = 0; i < 3; i++)
             disposables.add(lentaClient
                     .get(i)
-                    .observeOn(schedulers.getScheduler())
+                    .observeOn(postExecuteSchedulerProvider.getScheduler())
                     .subscribe(datas::add, throwable -> {},
                             () ->{
                                 fragmentView.setRefreshing(false);
