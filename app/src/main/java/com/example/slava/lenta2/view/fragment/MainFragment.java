@@ -13,12 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.slava.lenta2.R;
+import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
 import com.example.slava.lenta2.other.SchedulersProviderImpl;
 import com.example.slava.lenta2.presenter.IMainActivityPresenter;
 import com.example.slava.lenta2.presenter.MainFragmentPresenter;
 import com.example.slava.lenta2.presenter.IMainFragmentPresenter;
+import com.example.slava.lenta2.view.adapters.RvAdapterMain;
+
+import java.util.List;
 
 /**
  * Created by slava on 28.08.2017.
@@ -29,6 +33,7 @@ public class MainFragment extends Fragment implements IMainFragmentView {
     private RecyclerView recyclerView;
     private IMainFragmentPresenter fragmentPresenter;
     private SwipeRefreshLayout refreshLayout;
+    private RvAdapterMain adapter;
 
     public static Fragment getInstance(IMainActivityPresenter mainPresenter) {
         MainFragment fragment = new MainFragment();
@@ -48,6 +53,11 @@ public class MainFragment extends Fragment implements IMainFragmentView {
                 new TitlesClient(),
                 LentaClient.getInstance(),
                 new SchedulersProviderImpl());
+        fragmentPresenter.onCreate(savedInstanceState);
+        adapter = new RvAdapterMain(new TitlesClient().getTitles(),
+                fragmentPresenter,
+                link -> fragmentPresenter.onSelect(link));
+
     }
 
     @Nullable
@@ -56,6 +66,7 @@ public class MainFragment extends Fragment implements IMainFragmentView {
         View view = inflater.inflate(R.layout.fragment, container, false);
         recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+        recyclerView.setAdapter(adapter);
 
         fragmentPresenter.onCreateView(savedInstanceState, this);
 
@@ -69,11 +80,6 @@ public class MainFragment extends Fragment implements IMainFragmentView {
     public void onDestroyView() {
         super.onDestroyView();
         fragmentPresenter.onDestroyView();
-    }
-
-    @Override
-    public void setAdapter(RecyclerView.Adapter adapter) {
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -93,6 +99,12 @@ public class MainFragment extends Fragment implements IMainFragmentView {
                 .setData(Uri.parse(link))
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
+    }
+
+    @Override
+    public void setDatas(List<List<Data>> datas) {
+        adapter.setAllDatas(datas);
+        adapter.notifyDataSetChanged();
     }
 
 }

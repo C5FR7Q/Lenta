@@ -6,8 +6,6 @@ import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.SchedulersProvider;
-import com.example.slava.lenta2.view.adapters.RvAdapterItem;
-import com.example.slava.lenta2.view.adapters.RvAdapterMain;
 import com.example.slava.lenta2.view.fragment.DetailsFragment;
 import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
@@ -19,7 +17,6 @@ import java.util.List;
  */
 
 public class MainFragmentPresenter implements IMainFragmentPresenter {
-    private RvAdapterMain adapter;
     private IMainFragmentView fragmentView;
     private IMainActivityPresenter mainPresenter;
     private ITitlesClient titlesClient;
@@ -36,9 +33,6 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
         this.titlesClient = titlesClient;
         this.lentaClient = lentaClient;
         this.schedulers = schedulers;
-        ArrayList<String> titles = initTitles();
-        RvAdapterItem.OnItemSelectedListener listener = this::onSelect;
-        adapter = new RvAdapterMain(titles, this, listener);
     }
 
     private ArrayList<String> initTitles() {
@@ -57,20 +51,17 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     @Override
     public void onCreateView(Bundle savedInstanceState, IMainFragmentView view) {
         this.fragmentView = view;
-        if (adapter != null)
-            fragmentView.setAdapter(adapter);
     }
 
     @Override
-    public void askDatas(RvAdapterMain.ViewHolder holder, int position, boolean includeDesc, RvAdapterItem.OnItemSelectedListener insideListener) {
-        lentaClient
-                .get(position)
-                .subscribeOn(schedulers.io())
-                .observeOn(schedulers.mainThread())
-                .subscribe(dataz -> {
-                    adapter.setInsideAdapter(holder, dataz, includeDesc, insideListener);
-                    adapter.addDatas(dataz);
-                });
+    public void onCreate(Bundle savedInstanceState) {
+        List<List<Data>> datas = new ArrayList<>();
+        for (int i = 0; i < 3; i++)
+            lentaClient
+                    .get(i)
+                    .subscribeOn(schedulers.io())
+                    .observeOn(schedulers.mainThread())
+                    .subscribe(datas::add, throwable -> {}, () -> fragmentView.setDatas(datas));
     }
 
     @Override
@@ -78,6 +69,13 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
         this.fragmentView = null;
     }
 
+
+    /*Если заранее известно, что при pull-to-refresh порядок новостей в категориях не меняется,
+    * можно оптимизировать процесс. Для этого в refresh должен передаваться лист адаптера. Далее:
+    * для данного презентера для каждой категории сравнивается первый элемент(статья) посредством
+    * какого-то идентификатора. Можно, что логично, сравнивать по загаловкам статьи. Если равны,
+    * то не вызывается метод adapter.setAllDatas(...), так как перерисовывать одно и то же смысла
+    * не имеет. Для DetailsFragmentPresenter все аналогично, только для его единственной категории. */
     @Override
     public void refresh() {
         fragmentView.setRefreshing(true);
@@ -90,11 +88,11 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
                     .subscribe(datas::add, throwable -> {},
                             () ->{
                                 fragmentView.setRefreshing(false);
-                                adapter.setAllDatas(datas);
+                                fragmentView.setDatas(datas);
                             });
     }
-
-    private void onSelect(String link) {
+    @Override
+    public void onSelect(String link) {
         if (link.matches("^https://lenta\\.ru.*$"))
             fragmentView.browse(link);
     }

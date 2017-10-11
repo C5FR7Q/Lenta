@@ -53,18 +53,16 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
             holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             includeDesc = false;
         }
-        if (allDatas.size() <= position) {
-            fragmentPresenter.askDatas(holder, position, includeDesc, insideListener);
-        }
-        else holder.rv.setAdapter(new RvAdapterItem(allDatas.get(position), includeDesc, false, insideListener));
+        if (!(allDatas.size() <= position))
+            holder.rv.setAdapter(new RvAdapterItem(allDatas.get(position), includeDesc, false, insideListener));
     }
 
-    public void setInsideAdapter(ViewHolder holder,
+    /*public void setInsideAdapter(ViewHolder holder,
                                   List<Data> datas,
                                   boolean includeDesc,
                                   RvAdapterItem.OnItemSelectedListener insideListener){
         holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener));
-    }
+    }*/
 
     @Override
     public int getItemCount() {

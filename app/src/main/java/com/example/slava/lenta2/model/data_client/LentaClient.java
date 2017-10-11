@@ -13,6 +13,9 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
  */
 
 public class LentaClient {
+    public enum Request{
+        Hottest, Newest, All
+    }
     private static final String BASE_URL = "http://lenta.ru/";
     private static LentaClient client;
     private LentaApi lentaApi;
