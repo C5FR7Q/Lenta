@@ -1,1 +1,0 @@
-Если есть Activity/Fragment, внутри которого есть RecyclerView, то где нужно присваивать адаптер, во View, или в Presenter?

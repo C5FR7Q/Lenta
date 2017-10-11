@@ -46,7 +46,7 @@ public class DetailsFragmentPresenterTest {
                 new TitlesClient().getTitles().get(0),
                 new TitlesClient(),
                 mockLentaClient,
-                new TestSchedulersProvider());
+                new TestPostExecuteSchedulerProvider());
     }
 
 //    When view is created and calls onCreateView(...) of presenter, then presenter make view showData.

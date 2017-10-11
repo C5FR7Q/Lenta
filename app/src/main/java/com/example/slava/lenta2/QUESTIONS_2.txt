@@ -1,0 +1,2 @@
+Именование интерфейсов и классов наследников для случая 1к1: ISomeClass, SomeClass или SomeClass, SomeClassImpl?
+LentaClient - вопрос с возможным тестированием

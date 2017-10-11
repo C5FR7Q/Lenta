@@ -1,5 +1,7 @@
 package com.example.slava.lenta2.model.data_client;
 
+import com.example.slava.lenta2.other.IPreExecuteSchedulerProvider;
+import com.example.slava.lenta2.other.PreExecuteSchedulerProvider;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.List;
@@ -13,44 +15,52 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
  */
 
 public class LentaClient {
-    public enum Request{
-        Hottest, Newest, All
-    }
     private static final String BASE_URL = "http://lenta.ru/";
     private static LentaClient client;
     private LentaApi lentaApi;
+    private IPreExecuteSchedulerProvider schedulerProvider;
 
-    private LentaClient() {
+    /*Не знаю, как передать schedulerProvider в конструктор так, чтобы getInstance оставался без
+    * параметров*/
+    private LentaClient(){
+
+    }
+
+    private LentaClient(IPreExecuteSchedulerProvider schedulerProvider) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
         lentaApi = retrofit.create(LentaApi.class);
+        this.schedulerProvider = schedulerProvider;
     }
 
     public static LentaClient getInstance(){
         if (client != null)
             return client;
-        client = new LentaClient();
+        client = new LentaClient(new PreExecuteSchedulerProvider());
         return client;
     }
 
     private Observable<List<Data>> getHottest(){
         return lentaApi
                 .getHottest()
-                .flatMap(seed -> Observable.just(seed.getData()));
+                .flatMap(seed -> Observable.just(seed.getData()))
+                .subscribeOn(schedulerProvider.getScheduler());
     }
 
     private Observable<List<Data>> getNewest(){
         return lentaApi
                 .getNewest()
-                .flatMap(seed -> Observable.just(seed.getData()));
+                .flatMap(seed -> Observable.just(seed.getData()))
+                .subscribeOn(schedulerProvider.getScheduler());
     }
 
     private Observable<List<Data>> getAll(){
         return lentaApi
                 .getAll()
-                .flatMap(seed -> Observable.just(seed.getData()));
+                .flatMap(seed -> Observable.just(seed.getData()))
+                .subscribeOn(schedulerProvider.getScheduler());
     }
 
     public Observable<List<Data>> get(int i){

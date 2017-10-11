@@ -16,7 +16,7 @@ import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
-import com.example.slava.lenta2.other.SchedulersProviderImpl;
+import com.example.slava.lenta2.other.PostExecuteSchedulerProvider;
 import com.example.slava.lenta2.presenter.IMainActivityPresenter;
 import com.example.slava.lenta2.presenter.MainFragmentPresenter;
 import com.example.slava.lenta2.presenter.IMainFragmentPresenter;
@@ -52,7 +52,7 @@ public class MainFragment extends Fragment implements IMainFragmentView {
                 mainPresenter,
                 new TitlesClient(),
                 LentaClient.getInstance(),
-                new SchedulersProviderImpl());
+                new PostExecuteSchedulerProvider());
         fragmentPresenter.onCreate(savedInstanceState);
         adapter = new RvAdapterMain(new TitlesClient().getTitles(),
                 fragmentPresenter,

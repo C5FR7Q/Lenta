@@ -17,7 +17,7 @@ import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
-import com.example.slava.lenta2.other.SchedulersProviderImpl;
+import com.example.slava.lenta2.other.PostExecuteSchedulerProvider;
 import com.example.slava.lenta2.presenter.IMainActivityPresenter;
 import com.example.slava.lenta2.presenter.DetailsFragmentPresenter;
 import com.example.slava.lenta2.presenter.IDetailsFragmentPresenter;
@@ -58,7 +58,7 @@ public class DetailsFragment extends Fragment implements IDetailsFragmentView {
                 title,
                 new TitlesClient(),
                 LentaClient.getInstance(),
-                new SchedulersProviderImpl());
+                new PostExecuteSchedulerProvider());
     }
 
     @Nullable

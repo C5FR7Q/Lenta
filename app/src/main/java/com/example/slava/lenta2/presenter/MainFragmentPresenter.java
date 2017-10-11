@@ -5,12 +5,14 @@ import android.os.Bundle;
 import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
-import com.example.slava.lenta2.other.SchedulersProvider;
+import com.example.slava.lenta2.other.IPostExecuteSchedulerProvider;
 import com.example.slava.lenta2.view.fragment.DetailsFragment;
 import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by slava on 06.09.2017.
@@ -21,13 +23,14 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     private IMainActivityPresenter mainPresenter;
     private ITitlesClient titlesClient;
     private LentaClient lentaClient;
-    private SchedulersProvider schedulers;
+    private IPostExecuteSchedulerProvider schedulers;
+    private CompositeDisposable disposables;
 
     public MainFragmentPresenter(IMainFragmentView fragmentView,
                                  IMainActivityPresenter mainPresenter,
                                  ITitlesClient titlesClient,
                                  LentaClient lentaClient,
-                                 SchedulersProvider schedulers) {
+                                 IPostExecuteSchedulerProvider schedulers) {
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
         this.titlesClient = titlesClient;
@@ -51,22 +54,24 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     @Override
     public void onCreateView(Bundle savedInstanceState, IMainFragmentView view) {
         this.fragmentView = view;
+        disposables = new CompositeDisposable();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         List<List<Data>> datas = new ArrayList<>();
         for (int i = 0; i < 3; i++)
-            lentaClient
+            disposables.add(lentaClient
                     .get(i)
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.mainThread())
-                    .subscribe(datas::add, throwable -> {}, () -> fragmentView.setDatas(datas));
+                    .observeOn(schedulers.getScheduler())
+                    .subscribe(datas::add, throwable -> {
+                    }, () -> fragmentView.setDatas(datas)));
     }
 
     @Override
     public void onDestroyView() {
         this.fragmentView = null;
+        disposables.dispose();
     }
 
 
@@ -81,15 +86,14 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
         fragmentView.setRefreshing(true);
         List<List<Data>> datas = new ArrayList<>();
         for (int i = 0; i < 3; i++)
-            lentaClient
+            disposables.add(lentaClient
                     .get(i)
-                    .subscribeOn(schedulers.io())
-                    .observeOn(schedulers.mainThread())
+                    .observeOn(schedulers.getScheduler())
                     .subscribe(datas::add, throwable -> {},
                             () ->{
                                 fragmentView.setRefreshing(false);
                                 fragmentView.setDatas(datas);
-                            });
+                            }));
     }
     @Override
     public void onSelect(String link) {
