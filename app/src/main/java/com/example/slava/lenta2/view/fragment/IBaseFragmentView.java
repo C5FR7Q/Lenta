@@ -9,4 +9,5 @@ public interface IBaseFragmentView {
     boolean isRefreshing();
     boolean hasInternetConnection();
     void browse(String link);
+    void showMessage(String msg);
 }

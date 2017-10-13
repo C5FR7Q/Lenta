@@ -1,7 +1,9 @@
 package com.example.slava.lenta2.presenter;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.slava.lenta2.model.cache.ICache;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.DataListMapper;
@@ -20,6 +22,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class MainFragmentPresenter implements IMainFragmentPresenter {
+    private ICache cache;
     private DataListMapper mapper;
     private IMainFragmentView fragmentView;
     private IMainActivityPresenter mainPresenter;
@@ -32,12 +35,14 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
                                  IMainActivityPresenter mainPresenter,
                                  ITitlesClient titlesClient,
                                  LentaClient lentaClient,
-                                 IPostExecuteSchedulerProvider postExecuteSchedulerProvider) {
+                                 IPostExecuteSchedulerProvider postExecuteSchedulerProvider,
+                                 ICache cache) {
         this.fragmentView = fragmentView;
         this.mainPresenter = mainPresenter;
         this.titlesClient = titlesClient;
         this.lentaClient = lentaClient;
         this.postExecuteSchedulerProvider = postExecuteSchedulerProvider;
+        this.cache = cache;
         this.mapper = new DataListMapper();
     }
 
@@ -67,23 +72,40 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
             sendInternetRequest();
         }
         else {
-            tryCache();
+            loadFromCache();
         }
     }
 
-    private void tryCache() {
-
+    private void loadFromCache() {
+        disposables.add(cache.getDataList()
+                .observeOn(postExecuteSchedulerProvider.getScheduler())
+                .subscribe((datas) -> {
+                    fragmentView.setDatas(datas);
+                }, throwable -> fragmentView.showMessage(
+                        "Internet connection is lost. No cache available."
+                )));
     }
 
     private void sendInternetRequest() {
         List<List<Data>> datas = new ArrayList<>();
-        for (int i = 0; i < 3; i++)
-            disposables.add(lentaClient
-                    .get(i)
-                    .observeOn(postExecuteSchedulerProvider.getScheduler())
-                    .map(mapper)
-                    .subscribe(datas::add, throwable -> {
-                    }, () -> fragmentView.setDatas(datas)));
+        for (int i = 0; i < 3; i++) {
+            disposables.add(
+                    lentaClient
+                        .get(i)
+                        .map(mapper)
+                        .observeOn(postExecuteSchedulerProvider.getScheduler())
+                        .subscribe((e) -> {
+                                    datas.add(e);
+
+                            /*Это, скорее всего, костыль. Были идеи нормальной реализации с использованием
+                            * combineLatest. Но в итоге выглядело как еще больший костыль. При этом
+                             * работало не так, как нужно.*/
+                                    if (datas.size() == 3){
+                                        cache.putDataList(datas);
+                                    }
+                                }, throwable -> {},
+                                () -> fragmentView.setDatas(datas)));
+        }
     }
 
     @Override
