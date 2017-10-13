@@ -6,6 +6,7 @@ import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.DataListMapper;
 import com.example.slava.lenta2.other.IPostExecuteSchedulerProvider;
+import com.example.slava.lenta2.view.fragment.BaseFragment;
 import com.example.slava.lenta2.view.fragment.IDetailsFragmentView;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -75,6 +76,11 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
     @Override
     public void refresh() {
         detailsFragmentView.setRefreshing(true);
+        if (!detailsFragmentView.hasInternetConnection()){
+            detailsFragmentView.showMessage(BaseFragment.MSG_NO_INTERNET);
+            detailsFragmentView.setRefreshing(false);
+            return;
+        }
         for (int i = 0; i < titlesClient.getTitles().size(); i++) {
             if (titlesClient.getTitles().get(i).equals(title))
                 disposables.add(lentaClient

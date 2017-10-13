@@ -14,6 +14,7 @@ import android.widget.Toast;
  */
 
 public abstract class BaseFragment extends Fragment implements IBaseFragmentView {
+    public static final String MSG_NO_INTERNET = "No Internet connection.";
     protected SwipeRefreshLayout refreshLayout;
 
     @Override
@@ -44,6 +45,6 @@ public abstract class BaseFragment extends Fragment implements IBaseFragmentView
 
     @Override
     public void showMessage(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT);
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 }

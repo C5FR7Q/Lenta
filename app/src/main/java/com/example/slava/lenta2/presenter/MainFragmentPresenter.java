@@ -1,7 +1,6 @@
 package com.example.slava.lenta2.presenter;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.slava.lenta2.model.cache.ICache;
 import com.example.slava.lenta2.model.data_client.LentaClient;
@@ -9,6 +8,7 @@ import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.DataListMapper;
 import com.example.slava.lenta2.other.IPostExecuteSchedulerProvider;
 import com.example.slava.lenta2.view.Data;
+import com.example.slava.lenta2.view.fragment.BaseFragment;
 import com.example.slava.lenta2.view.fragment.DetailsFragment;
 import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
@@ -52,6 +52,10 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
 
     @Override
     public void onViewClicked(int position) {
+        if (!fragmentView.hasInternetConnection()){
+            fragmentView.showMessage(BaseFragment.MSG_NO_INTERNET);
+            return;
+        }
         if (mainPresenter != null){
             String title = initTitles().get(position);
             mainPresenter.replaceFragment(DetailsFragment.getInstance(title, mainPresenter), true);
@@ -125,6 +129,11 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     @Override
     public void refresh() {
         fragmentView.setRefreshing(true);
+        if (!fragmentView.hasInternetConnection()){
+            fragmentView.showMessage(BaseFragment.MSG_NO_INTERNET);
+            fragmentView.setRefreshing(false);
+            return;
+        }
         List<List<Data>> datas = new ArrayList<>();
         for (int i = 0; i < 3; i++)
             disposables.add(lentaClient

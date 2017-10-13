@@ -24,13 +24,15 @@ import java.io.IOException;
 
 public class FileManager {
   public void writeToFile(File file, String fileContent) {
-      try {
-        FileWriter writer = new FileWriter(file);
-        writer.write(fileContent);
-        writer.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    if (file.exists())
+      file.delete();
+    try {
+      FileWriter writer = new FileWriter(file);
+      writer.write(fileContent);
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public String readFileContent(File file) {
