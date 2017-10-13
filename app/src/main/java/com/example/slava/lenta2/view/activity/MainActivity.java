@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         setContentView(R.layout.activity_main);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading data");
+        progressDialog.setCancelable(false);
         if (getLastCustomNonConfigurationInstance() == null)
             presenter = new MainActivityPresenter(this);
         else presenter = (IMainActivityPresenter) getLastCustomNonConfigurationInstance();

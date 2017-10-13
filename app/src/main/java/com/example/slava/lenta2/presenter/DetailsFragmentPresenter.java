@@ -50,17 +50,18 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
     public void onCreateView(Bundle savedInstanceState, IDetailsFragmentView view) {
         this.disposables = new CompositeDisposable();
         this.detailsFragmentView = view;
-        mainPresenter.showProgressDialog();
-        for (int i = 0; i < titlesClient.getTitles().size(); i++) {
-            if (titlesClient.getTitles().get(i).equals(title))
-                disposables.add(lentaClient
-                        .get(i)
-                        .observeOn(postExecuteSchedulerProvider.getScheduler())
-                        .map(mapper)
-                        .subscribe(datas -> {
-                            mainPresenter.hideProgressDialog();
-                            detailsFragmentView.showDatas(datas, this);
-                        }));
+        if (view.hasInternetConnection()) {
+            mainPresenter.showProgressDialog();
+            for (int i = 0; i < titlesClient.getTitles().size(); i++)
+                if (titlesClient.getTitles().get(i).equals(title))
+                    disposables.add(lentaClient
+                            .get(i)
+                            .observeOn(postExecuteSchedulerProvider.getScheduler())
+                            .map(mapper)
+                            .subscribe(datas -> {
+                                mainPresenter.hideProgressDialog();
+                                detailsFragmentView.showDatas(datas, this);
+                            }));
         }
     }
 

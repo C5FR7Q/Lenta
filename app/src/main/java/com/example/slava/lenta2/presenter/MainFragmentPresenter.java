@@ -63,6 +63,19 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         disposables = new CompositeDisposable();
+        if (fragmentView.hasInternetConnection()) {
+            sendInternetRequest();
+        }
+        else {
+            tryCache();
+        }
+    }
+
+    private void tryCache() {
+
+    }
+
+    private void sendInternetRequest() {
         List<List<Data>> datas = new ArrayList<>();
         for (int i = 0; i < 3; i++)
             disposables.add(lentaClient

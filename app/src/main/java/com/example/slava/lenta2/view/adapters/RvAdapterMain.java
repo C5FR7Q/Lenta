@@ -66,7 +66,7 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
 
     @Override
     public int getItemCount() {
-        return (titles == null) ? 0 : titles.size();
+        return (allDatas == null) ? 0 : allDatas.size();
     }
 
     public void addDatas(List<Data> data){

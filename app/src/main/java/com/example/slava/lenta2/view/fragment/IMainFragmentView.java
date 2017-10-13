@@ -8,7 +8,6 @@ import java.util.List;
  * Created by slava on 06.09.2017.
  */
 
-public interface IMainFragmentView extends IRefreshingView{
-    void browse(String link);
+public interface IMainFragmentView extends IBaseFragmentView {
     void setDatas(List<List<Data>> datas);
 }

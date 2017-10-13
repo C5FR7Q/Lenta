@@ -1,8 +1,6 @@
 package com.example.slava.lenta2.view.fragment;
 
 import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,11 +26,10 @@ import java.util.List;
  * Created by slava on 28.08.2017.
  */
 
-public class MainFragment extends Fragment implements IMainFragmentView {
+public class MainFragment extends BaseFragment implements IMainFragmentView {
     private static final String MAIN_PRESENTER = "main_presenter";
     private RecyclerView recyclerView;
     private IMainFragmentPresenter fragmentPresenter;
-    private SwipeRefreshLayout refreshLayout;
     private RvAdapterMain adapter;
 
     public static Fragment getInstance(IMainActivityPresenter mainPresenter) {
@@ -80,25 +77,6 @@ public class MainFragment extends Fragment implements IMainFragmentView {
     public void onDestroyView() {
         super.onDestroyView();
         fragmentPresenter.onDestroyView();
-    }
-
-    @Override
-    public void setRefreshing(boolean isRefreshing) {
-        refreshLayout.setRefreshing(isRefreshing);
-    }
-
-    @Override
-    public boolean isRefreshing() {
-        return refreshLayout.isRefreshing();
-    }
-
-    @Override
-    public void browse(String link) {
-        getActivity().startActivity(new Intent()
-                .setAction(Intent.ACTION_VIEW)
-                .setData(Uri.parse(link))
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-
     }
 
     @Override

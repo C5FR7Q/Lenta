@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.view.Data;
 
@@ -58,6 +59,7 @@ public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder
         if (data.getPicLink() != null) {
             Glide.with(holder.itemView.getContext())
                     .load(data.getPicLink())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(holder.iv);
         }
         else holder.iv.setVisibility(View.GONE);

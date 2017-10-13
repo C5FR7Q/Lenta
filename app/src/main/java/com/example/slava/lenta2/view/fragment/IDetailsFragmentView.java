@@ -9,10 +9,8 @@ import java.util.List;
  * Created by slava on 07.09.2017.
  */
 
-public interface IDetailsFragmentView extends IRefreshingView{
+public interface IDetailsFragmentView extends IBaseFragmentView {
 
     void showDatas(List<Data> datas, RvAdapterItem.OnItemSelectedListener listener);
     void refreshDatas(List<Data> datas);
-
-    void browse(String link);
 }
