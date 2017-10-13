@@ -2,10 +2,11 @@ package com.example.slava.lenta2.presenter;
 
 import android.os.Bundle;
 
-import com.example.slava.lenta2.model.data_client.Data;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
+import com.example.slava.lenta2.other.DataListMapper;
 import com.example.slava.lenta2.other.IPostExecuteSchedulerProvider;
+import com.example.slava.lenta2.view.Data;
 import com.example.slava.lenta2.view.fragment.DetailsFragment;
 import com.example.slava.lenta2.view.fragment.IMainFragmentView;
 
@@ -19,6 +20,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class MainFragmentPresenter implements IMainFragmentPresenter {
+    private DataListMapper mapper;
     private IMainFragmentView fragmentView;
     private IMainActivityPresenter mainPresenter;
     private ITitlesClient titlesClient;
@@ -36,6 +38,7 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
         this.titlesClient = titlesClient;
         this.lentaClient = lentaClient;
         this.postExecuteSchedulerProvider = postExecuteSchedulerProvider;
+        this.mapper = new DataListMapper();
     }
 
     private ArrayList<String> initTitles() {
@@ -59,11 +62,13 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        disposables = new CompositeDisposable();
         List<List<Data>> datas = new ArrayList<>();
         for (int i = 0; i < 3; i++)
             disposables.add(lentaClient
                     .get(i)
                     .observeOn(postExecuteSchedulerProvider.getScheduler())
+                    .map(mapper)
                     .subscribe(datas::add, throwable -> {
                     }, () -> fragmentView.setDatas(datas)));
     }
@@ -71,7 +76,8 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
     @Override
     public void onDestroyView() {
         this.fragmentView = null;
-        disposables.dispose();
+        this.disposables.dispose();
+        this.disposables = null;
     }
 
 
@@ -89,6 +95,7 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
             disposables.add(lentaClient
                     .get(i)
                     .observeOn(postExecuteSchedulerProvider.getScheduler())
+                    .map(mapper)
                     .subscribe(datas::add, throwable -> {},
                             () ->{
                                 fragmentView.setRefreshing(false);

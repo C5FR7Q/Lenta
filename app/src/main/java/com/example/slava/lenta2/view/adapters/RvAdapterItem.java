@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.model.data_client.Data;
+import com.example.slava.lenta2.view.Data;
 
 import java.util.ArrayList;
 import java.util.List;

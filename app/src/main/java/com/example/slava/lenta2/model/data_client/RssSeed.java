@@ -15,13 +15,13 @@ public class RssSeed {
 
     @ElementList(name = "item", inline = true)
     @Path(value = "channel")
-    private List<Data> data;
+    private List<DataDTO> data;
 
-    public List<Data> getData() {
+    public List<DataDTO> getData() {
         return data;
     }
 
-    public void setData(List<Data> data) {
+    public void setData(List<DataDTO> data) {
         this.data = data;
     }
 }

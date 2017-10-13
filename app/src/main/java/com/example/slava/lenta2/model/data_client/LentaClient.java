@@ -42,28 +42,28 @@ public class LentaClient {
         return client;
     }
 
-    private Observable<List<Data>> getHottest(){
+    private Observable<List<DataDTO>> getHottest(){
         return lentaApi
                 .getHottest()
                 .flatMap(seed -> Observable.just(seed.getData()))
                 .subscribeOn(schedulerProvider.getScheduler());
     }
 
-    private Observable<List<Data>> getNewest(){
+    private Observable<List<DataDTO>> getNewest(){
         return lentaApi
                 .getNewest()
                 .flatMap(seed -> Observable.just(seed.getData()))
                 .subscribeOn(schedulerProvider.getScheduler());
     }
 
-    private Observable<List<Data>> getAll(){
+    private Observable<List<DataDTO>> getAll(){
         return lentaApi
                 .getAll()
                 .flatMap(seed -> Observable.just(seed.getData()))
                 .subscribeOn(schedulerProvider.getScheduler());
     }
 
-    public Observable<List<Data>> get(int i){
+    public Observable<List<DataDTO>> get(int i){
         switch (i){
             case 0:
                 return getHottest();

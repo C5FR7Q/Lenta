@@ -1,33 +1,30 @@
-package com.example.slava.lenta2.model.data_client;
-
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Path;
-import org.simpleframework.xml.Root;
+package com.example.slava.lenta2.view;
 
 /**
- * Created by slava on 29.08.2017.
+ * Created by slava on 13.10.2017.
  */
 
-@Root(name = "item", strict = false)
 public class Data {
-    @Element(name = "link")
+    public Data(String link, String title, String description,
+                String pubDate, String picLink, String category) {
+        this.link = link;
+        this.title = title;
+        this.description = description;
+        this.pubDate = pubDate;
+        this.picLink = picLink;
+        this.category = category;
+    }
+
     private String link;
 
-    @Element(name = "title")
     private String title;
 
-    @Element(name = "description")
     private String description;
 
-    @Element(name = "pubDate")
     private String pubDate;
 
-    @Path(value = "enclosure")
-    @Attribute(name = "url")
     private String picLink;
 
-    @Element(name = "category", required = false)
     private String category;
 
     public String getPicLink() {

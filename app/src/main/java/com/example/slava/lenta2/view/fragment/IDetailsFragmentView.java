@@ -1,6 +1,6 @@
 package com.example.slava.lenta2.view.fragment;
 
-import com.example.slava.lenta2.model.data_client.Data;
+import com.example.slava.lenta2.view.Data;
 import com.example.slava.lenta2.view.adapters.RvAdapterItem;
 
 import java.util.List;

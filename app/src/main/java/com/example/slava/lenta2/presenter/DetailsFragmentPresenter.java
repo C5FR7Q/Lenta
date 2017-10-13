@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
+import com.example.slava.lenta2.other.DataListMapper;
 import com.example.slava.lenta2.other.IPostExecuteSchedulerProvider;
 import com.example.slava.lenta2.view.fragment.IDetailsFragmentView;
 
@@ -17,6 +18,7 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
     private final String title;
     private final ITitlesClient titlesClient;
     private final LentaClient lentaClient;
+    private final DataListMapper mapper;
     private IDetailsFragmentView detailsFragmentView;
     private final IMainActivityPresenter mainPresenter;
     private IPostExecuteSchedulerProvider postExecuteSchedulerProvider;
@@ -34,6 +36,7 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
         this.titlesClient = titlesClient;
         this.lentaClient = lentaClient;
         this.postExecuteSchedulerProvider = postExecuteSchedulerProvider;
+        this.mapper = new DataListMapper();
     }
 
     @Override
@@ -53,6 +56,7 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
                 disposables.add(lentaClient
                         .get(i)
                         .observeOn(postExecuteSchedulerProvider.getScheduler())
+                        .map(mapper)
                         .subscribe(datas -> {
                             mainPresenter.hideProgressDialog();
                             detailsFragmentView.showDatas(datas, this);
@@ -63,7 +67,8 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
     @Override
     public void onDestroyView() {
         this.detailsFragmentView = null;
-        disposables.dispose();
+        this.disposables.dispose();
+        this.disposables = null;
     }
 
     @Override
@@ -74,6 +79,7 @@ public class DetailsFragmentPresenter implements IDetailsFragmentPresenter {
                 disposables.add(lentaClient
                         .get(i)
                         .observeOn(postExecuteSchedulerProvider.getScheduler())
+                        .map(mapper)
                         .subscribe(datas -> {
                             detailsFragmentView.refreshDatas(datas);
                             detailsFragmentView.setRefreshing(false);
