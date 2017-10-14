@@ -20,6 +20,7 @@ import com.example.slava.lenta2.view.Data;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * An interface representing a user Cache.
@@ -28,6 +29,6 @@ public interface ICache {
 
   Observable<List<List<Data>>> getDataList();
 
-  void putDataList(List<List<Data>> data);
+  Disposable putDataList(List<List<Data>> data);
 
 }

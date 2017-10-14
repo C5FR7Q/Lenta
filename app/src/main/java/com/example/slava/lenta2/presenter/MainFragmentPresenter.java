@@ -105,7 +105,7 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
                             * combineLatest. Но в итоге выглядело как еще больший костыль. При этом
                              * работало не так, как нужно.*/
                                     if (datas.size() == 3){
-                                        cache.putDataList(datas);
+                                        disposables.add(cache.putDataList(datas));
                                     }
                                 }, throwable -> {},
                                 () -> fragmentView.setDatas(datas)));
@@ -145,7 +145,7 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
                                 fragmentView.setRefreshing(false);
                                 fragmentView.setDatas(datas);
                                 if (datas.size() == 3){
-                                    cache.putDataList(datas);
+                                    disposables.add(cache.putDataList(datas));
                                 }
                             }));
     }
