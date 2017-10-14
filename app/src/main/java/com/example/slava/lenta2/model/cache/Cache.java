@@ -9,6 +9,7 @@ import com.example.slava.lenta2.view.Data;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 
@@ -56,11 +57,16 @@ public class Cache implements ICache {
     public void putDataList(List<List<Data>> data) {
         if (!data.isEmpty()){
             String json = serializer.serialize(data);
-            new Thread(new Writer(json, this.fileManager, filePath)).start();
+            Observable.fromCallable(new Writer(json, fileManager, filePath))
+                    .subscribeOn(preExecuteSchedulerProvider.getScheduler())
+                    .subscribe(aVoid -> {},throwable -> {});
+            /*Важно, чтобы при ошибке ничего не происходило. Дело в том, что Callable<Void>
+            * в методе call должен содержать return. Вернуть можно только null. Тогда вышестоящая
+            * цепочка без указания throwable -> {} выбрасывает "Callable returned null"*/
         }
     }
 
-    private static class Writer implements Runnable{
+    private static class Writer implements Callable<Void> {
         private String json;
         private FileManager fileManager;
         private File file;
@@ -72,8 +78,9 @@ public class Cache implements ICache {
         }
 
         @Override
-        public void run() {
+        public Void call() throws Exception {
             fileManager.writeToFile(file, json);
+            return null;
         }
     }
 }

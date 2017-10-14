@@ -144,6 +144,9 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
                             () ->{
                                 fragmentView.setRefreshing(false);
                                 fragmentView.setDatas(datas);
+                                if (datas.size() == 3){
+                                    cache.putDataList(datas);
+                                }
                             }));
     }
     @Override
