@@ -1,7 +1,6 @@
 package com.example.slava.lenta2.other;
 
 import android.support.v7.util.DiffUtil;
-import android.util.Log;
 
 import com.example.slava.lenta2.view.Data;
 
@@ -32,15 +31,11 @@ public class DataDiffUtilCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        boolean b = (oldData.get(oldItemPosition).getTitle()).equals(newData.get(newItemPosition).getTitle());
-        Log.d("DataDiffUtilCallback", "b:" + b);
-        return b;
+        return (oldData.get(oldItemPosition).getTitle()).equals(newData.get(newItemPosition).getTitle());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        boolean equals = (oldData.get(oldItemPosition).getTitle()).equals(newData.get(newItemPosition).getTitle());
-        Log.d("DataDiffUtilCallback", "equals:" + equals);
-        return equals;
+        return (oldData.get(oldItemPosition).getTitle()).equals(newData.get(newItemPosition).getTitle());
     }
 }
