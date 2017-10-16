@@ -84,7 +84,6 @@ public class MainFragment extends BaseFragment implements IMainFragmentView {
     @Override
     public void setDatas(List<List<Data>> datas) {
         adapter.setAllDatas(datas);
-        adapter.notifyDataSetChanged();
     }
 
 }

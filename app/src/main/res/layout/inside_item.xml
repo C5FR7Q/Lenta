@@ -31,7 +31,8 @@
 
         <ImageView
             android:id="@+id/iv"
-            android:layout_width="match_parent"
+
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
@@ -40,10 +41,7 @@
             android:layout_marginTop="4dp"
             android:layout_weight="4.52"
             android:adjustViewBounds="true"
-            android:minHeight="60dp"
-            android:minWidth="60dp"
-            android:scaleType="fitCenter"
-           app:srcCompat="@drawable/ic_image_black_24dp" />
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/tvArcticleBody"
@@ -71,10 +69,10 @@
             android:id="@+id/tvArticleDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_weight="1"
             android:text="date" />
     </LinearLayout>

@@ -106,9 +106,9 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
                              * работало не так, как нужно.*/
                                     if (datas.size() == 3){
                                         disposables.add(cache.putDataList(datas));
+                                        fragmentView.setDatas(datas);
                                     }
-                                }, throwable -> {},
-                                () -> fragmentView.setDatas(datas)));
+                                }));
         }
     }
 
@@ -143,9 +143,9 @@ public class MainFragmentPresenter implements IMainFragmentPresenter {
                     .subscribe(datas::add, throwable -> {},
                             () ->{
                                 fragmentView.setRefreshing(false);
-                                fragmentView.setDatas(datas);
                                 if (datas.size() == 3){
                                     disposables.add(cache.putDataList(datas));
+                                    fragmentView.setDatas(datas);
                                 }
                             }));
     }
