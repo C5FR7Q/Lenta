@@ -1,5 +1,6 @@
 package com.example.slava.lenta2.view.adapters;
 
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.slava.lenta2.R;
+import com.example.slava.lenta2.other.DataDiffUtilCallback;
 import com.example.slava.lenta2.view.Data;
 
 import java.util.ArrayList;
@@ -75,8 +77,14 @@ public class RvAdapterItem extends RecyclerView.Adapter<RvAdapterItem.ViewHolder
     }
 
     public void refreshDatas(List<Data> datas) {
-        this.datas = datas;
-        notifyDataSetChanged();
+        DataDiffUtilCallback utilCallback = new DataDiffUtilCallback(this.datas, datas);
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(utilCallback, true);
+
+        this.datas.clear();
+        this.datas.addAll(datas);
+
+        result.dispatchUpdatesTo(this);
+//        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

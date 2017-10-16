@@ -24,6 +24,7 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
     private final ArrayList<String> titles;
     private final IMainFragmentPresenter fragmentPresenter;
     private final RvAdapterItem.OnItemSelectedListener insideListener;
+    private ArrayList<RvAdapterItem> insideAdapters;
     private List<List<Data>> allDatas = new ArrayList<>();
 
     public RvAdapterMain(ArrayList<String> titles,
@@ -32,6 +33,7 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
         this.titles = titles;
         this.fragmentPresenter = fragmentPresenter;
         this.insideListener = insideListener;
+        this.insideAdapters = new ArrayList<>();
     }
 
     @Override
@@ -53,8 +55,12 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
             holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             includeDesc = false;
         }
-        if (!(allDatas.size() <= position))
-            holder.rv.setAdapter(new RvAdapterItem(allDatas.get(position), includeDesc, false, insideListener));
+
+        if (insideAdapters.size() <= position) {
+            RvAdapterItem adapter = new RvAdapterItem(allDatas.get(position), includeDesc, false, insideListener);
+            insideAdapters.add(adapter);
+        }
+        holder.rv.setAdapter(insideAdapters.get(position));
     }
 
     /*public void setInsideAdapter(ViewHolder holder,
@@ -78,8 +84,16 @@ public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder
 
     public void setAllDatas(List<List<Data>> datas){
         if (isValid(datas)){
-            this.allDatas = datas;
-            notifyDataSetChanged();
+            if (this.allDatas.size() == 0) {
+                this.allDatas = datas;
+                notifyDataSetChanged();
+            }
+            else {
+                this.allDatas = datas;
+                for (int i = 0; i < insideAdapters.size(); i++){
+                    insideAdapters.get(i).refreshDatas(allDatas.get(i));
+                }
+            }
         }
     }
 
