@@ -13,7 +13,6 @@ import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by slava on 13.10.2017.
