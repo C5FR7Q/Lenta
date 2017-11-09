@@ -11,18 +11,22 @@ import java.util.List;
  */
 
 @Root(name = "rss", strict = false)
-public class RssSeed {
+public
+class RssSeed
+{
 
-    @ElementList(name = "item", inline = true)
-    @Path(value = "channel")
-    private List<DataDTO> data;
+	@ElementList(name = "item", inline = true)
+	@Path(value = "channel")
+	private List<DataDTO> data;
 
-    public List<DataDTO> getData() {
-        return data;
-    }
+	public
+	List<DataDTO> getData() {
+		return data;
+	}
 
-    public void setData(List<DataDTO> data) {
-        this.data = data;
-    }
+	public
+	void setData(final List<DataDTO> data) {
+		this.data = data;
+	}
 }
 

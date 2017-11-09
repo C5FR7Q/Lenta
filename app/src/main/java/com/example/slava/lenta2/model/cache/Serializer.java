@@ -10,14 +10,18 @@ import java.util.List;
  * Created by slava on 13.10.2017.
  */
 
-final public class Serializer {
-    private Gson gson = new Gson();
+final public
+class Serializer
+{
+	private final Gson gson = new Gson();
 
-    public String serialize(Object object) {
-        return gson.toJson(object);
-    }
+	public
+	String serialize(final Object object) {
+		return gson.toJson(object);
+	}
 
-    public List<List<Data>> deserialize(String string) {
-        return gson.fromJson(string, new TypeToken<List<List<Data>>>(){}.getType());
-    }
+	public
+	List<List<Data>> deserialize(final String string) {
+		return gson.fromJson(string, new TypeToken<List<List<Data>>>() {}.getType());
+	}
 }

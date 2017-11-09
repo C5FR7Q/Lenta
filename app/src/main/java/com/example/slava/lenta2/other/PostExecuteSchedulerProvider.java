@@ -7,9 +7,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by slava on 01.10.2017.
  */
 
-public class PostExecuteSchedulerProvider implements IPostExecuteSchedulerProvider {
-    @Override
-    public Scheduler getScheduler() {
-        return AndroidSchedulers.mainThread();
-    }
+public
+class PostExecuteSchedulerProvider
+		implements IPostExecuteSchedulerProvider
+{
+	@Override
+	public
+	Scheduler getScheduler() {
+		return AndroidSchedulers.mainThread();
+	}
 }

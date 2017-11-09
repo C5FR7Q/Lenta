@@ -13,38 +13,44 @@ import android.widget.Toast;
  * Created by slava on 13.10.2017.
  */
 
-public abstract class BaseFragment extends Fragment implements IBaseFragmentView {
-    public static final String MSG_NO_INTERNET = "No Internet connection.";
-    protected SwipeRefreshLayout refreshLayout;
+public abstract
+class BaseFragment
+		extends Fragment
+		implements IBaseFragmentView
+{
+	public static final String MSG_NO_INTERNET = "No Internet connection.";
+	protected SwipeRefreshLayout refreshLayout;
 
-    @Override
-    public void setRefreshing(boolean isRefreshing) {
-        refreshLayout.setRefreshing(isRefreshing);
-    }
+	@Override
+	public
+	void setRefreshing(final boolean isRefreshing) {
+		refreshLayout.setRefreshing(isRefreshing);
+	}
 
-    @Override
-    public boolean isRefreshing() {
-        return refreshLayout.isRefreshing();
-    }
+	@Override
+	public
+	boolean hasInternetConnection() {
+		final ConnectivityManager cm =
+				(ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = null;
+		if (cm != null) {
+			netInfo = cm.getActiveNetworkInfo();
+		}
+		return netInfo != null && netInfo.isConnectedOrConnecting();
+	}
 
-    @Override
-    public boolean hasInternetConnection() {
-            ConnectivityManager cm =
-                    (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
+	@Override
+	public
+	void browse(final String link) {
+		getActivity().startActivity(new Intent()
+				.setAction(Intent.ACTION_VIEW)
+				.setData(Uri.parse(link))
+				.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+	}
 
-    @Override
-    public void browse(String link) {
-        getActivity().startActivity(new Intent()
-                .setAction(Intent.ACTION_VIEW)
-                .setData(Uri.parse(link))
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
-
-    @Override
-    public void showMessage(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
+	@Override
+	public
+	void showMessage(final String msg) {
+		Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+	}
 }

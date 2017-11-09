@@ -13,13 +13,20 @@ import io.reactivex.functions.Function;
  * Created by slava on 13.10.2017.
  */
 
-public class DataListMapper implements Function<List<DataDTO>, List<Data>> {
-    @Override
-    public List<Data> apply(@NonNull List<DataDTO> dataDTOs) throws Exception {
-        List<Data> data = new ArrayList<>();
-        dataDTOs.forEach(dataDTO -> data.add(new Data(dataDTO.getLink(),
-                dataDTO.getTitle(), dataDTO.getDescription(),
-                dataDTO.getPubDate(), dataDTO.getPicLink(), dataDTO.getCategory())));
-        return data;
-    }
+public
+class DataListMapper
+		implements Function<List<DataDTO>, List<Data>>
+{
+	@Override
+	public
+	List<Data> apply(@NonNull final List<DataDTO> dataDTOs) throws Exception {
+		final List<Data> dataList = new ArrayList<>();
+		for (DataDTO dataDTO : dataDTOs) {
+			dataList.add(new Data(dataDTO.getLink(),
+					dataDTO.getTitle(), dataDTO.getDescription(),
+					dataDTO.getPubDate(), dataDTO.getPicLink(), dataDTO.getCategory()
+			));
+		}
+		return dataList;
+	}
 }

@@ -27,63 +27,75 @@ import java.util.List;
  * Created by slava on 28.08.2017.
  */
 
-public class MainFragment extends BaseFragment implements IMainFragmentView {
-    private static final String MAIN_PRESENTER = "main_presenter";
-    private RecyclerView recyclerView;
-    private IMainFragmentPresenter fragmentPresenter;
-    private RvAdapterMain adapter;
+public
+class MainFragment
+		extends BaseFragment
+		implements IMainFragmentView
+{
+	private static final String MAIN_PRESENTER = "main_presenter";
+	private IMainFragmentPresenter fragmentPresenter;
+	private RvAdapterMain adapter;
 
-    public static Fragment getInstance(IMainActivityPresenter mainPresenter) {
-        MainFragment fragment = new MainFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(MAIN_PRESENTER, mainPresenter);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+	public static
+	Fragment getInstance(final IMainActivityPresenter mainPresenter) {
+		final MainFragment fragment = new MainFragment();
+		final Bundle bundle = new Bundle();
+		bundle.putParcelable(MAIN_PRESENTER, mainPresenter);
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        IMainActivityPresenter mainPresenter = (IMainActivityPresenter) getArguments().getParcelable(MAIN_PRESENTER);
-        fragmentPresenter = new MainFragmentPresenter(this,
-                mainPresenter,
-                new TitlesClient(),
-                LentaClient.getInstance(),
-                new PostExecuteSchedulerProvider(),
-                new Cache(getActivity()));
-        fragmentPresenter.onCreate(savedInstanceState);
-        adapter = new RvAdapterMain(new TitlesClient().getTitles(),
-                fragmentPresenter,
-                link -> fragmentPresenter.onSelect(link));
+	@Override
+	public
+	void onCreate(@Nullable final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+		final IMainActivityPresenter mainPresenter = (IMainActivityPresenter) getArguments().getParcelable(MAIN_PRESENTER);
+		fragmentPresenter = new MainFragmentPresenter(
+				this,
+				mainPresenter,
+				new TitlesClient(),
+				LentaClient.getInstance(),
+				new PostExecuteSchedulerProvider(),
+				new Cache(getActivity())
+		);
+		fragmentPresenter.onCreate(savedInstanceState);
+		adapter = new RvAdapterMain(
+				new TitlesClient().getTitles(),
+				fragmentPresenter,
+				link -> fragmentPresenter.onSelect(link)
+		);
 
-    }
+	}
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment, container, false);
-        recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
-        recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        recyclerView.setAdapter(adapter);
+	@Nullable
+	@Override
+	public
+	View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, final Bundle savedInstanceState) {
+		final View view = inflater.inflate(R.layout.fragment, container, false);
+		final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_main);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
+		recyclerView.setAdapter(adapter);
 
-        fragmentPresenter.onCreateView(savedInstanceState, this);
+		fragmentPresenter.onCreateView(savedInstanceState, this);
 
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeLayout);
-        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
-        refreshLayout.setOnRefreshListener(() -> fragmentPresenter.refresh());
-        return view;
-    }
+		refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeLayout);
+		refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+		refreshLayout.setOnRefreshListener(() -> fragmentPresenter.refresh());
+		return view;
+	}
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        fragmentPresenter.onDestroyView();
-    }
+	@Override
+	public
+	void onDestroyView() {
+		super.onDestroyView();
+		fragmentPresenter.onDestroyView();
+	}
 
-    @Override
-    public void setDatas(List<List<Data>> datas) {
-        adapter.setAllDatas(datas);
-    }
+	@Override
+	public
+	void setDataLists(final List<List<Data>> lists) {
+		adapter.setLists(lists);
+	}
 
 }

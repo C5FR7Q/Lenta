@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import io.reactivex.Observable;
@@ -32,49 +33,60 @@ import static org.mockito.Mockito.when;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DetailsFragmentPresenterTest {
-    @Mock private MainActivityPresenter mockMainPresenter;
-    @Mock private DetailsFragment mockDetailsView;
-    @Mock private LentaClient mockLentaClient;
+public
+class DetailsFragmentPresenterTest
+{
+	@Mock
+	private MainActivityPresenter mockMainPresenter;
+	@Mock
+	private DetailsFragment mockDetailsView;
+	@Mock
+	private LentaClient mockLentaClient;
 
-    private DetailsFragmentPresenter presenter;
+	private DetailsFragmentPresenter presenter;
 
-    @Before
-    public void setUp() throws Exception {
-        presenter = new DetailsFragmentPresenter(mockDetailsView,
-                mockMainPresenter,
-                new TitlesClient().getTitles().get(0),
-                new TitlesClient(),
-                mockLentaClient,
-                new TestPostExecuteSchedulerProvider());
-    }
+	@Before
+	public
+	void setUp() throws Exception {
+		presenter = new DetailsFragmentPresenter(
+				mockDetailsView,
+				mockMainPresenter,
+				new TitlesClient().getTitles().get(0),
+				new TitlesClient(),
+				mockLentaClient,
+				new TestPostExecuteSchedulerProvider()
+		);
+	}
 
-//    When view is created and calls onCreateView(...) of presenter, then presenter make view showData.
-    @Test
-    public void testOnCreateView() {
-        when(mockLentaClient.get(anyInt() % 3))
-                .thenReturn(Observable.just(Collections.EMPTY_LIST));
-        presenter.onCreateView(mock(Bundle.class), mockDetailsView);
-        verify(mockMainPresenter).showProgressDialog();
-        verify(mockLentaClient, only()).get(anyInt() % 3);
-        verify(mockDetailsView, only()).showDatas(any(), any());
-        verify(mockMainPresenter).hideProgressDialog();
-    }
+	//    When view is created and calls onCreateView(...) of presenter, then presenter make view showData.
+	@Test
+	public
+	void testOnCreateView() {
+		when(mockLentaClient.get(anyInt() % 3))
+				.thenReturn(Observable.just(new ArrayList<>()));
+		presenter.onCreateView(mock(Bundle.class), mockDetailsView);
+		verify(mockMainPresenter).showProgressDialog();
+		verify(mockLentaClient, only()).get(anyInt() % 3);
+		verify(mockDetailsView, only()).showData(any(), any());
+		verify(mockMainPresenter).hideProgressDialog();
+	}
 
-//    Go next activity in case of right link.
-    @Test
-    public void testOnRightSelect() {
-        String link = "https://lenta.ru/";
-        presenter.onSelect(link);
-        verify(mockDetailsView, only()).browse(link);
-    }
+	//    Go next activity in case of right link.
+	@Test
+	public
+	void testOnRightSelect() {
+		final String link = "https://lenta.ru/";
+		presenter.onSelect(link);
+		verify(mockDetailsView, only()).browse(link);
+	}
 
-//    Do nothing if link is wrong.
-    @Test
-    public void testOnWrongSelect() {
-        String link = "https://lena.ru";
-        presenter.onSelect(link);
-        verify(mockDetailsView, never()).browse(link);
-    }
+	//    Do nothing if link is wrong.
+	@Test
+	public
+	void testOnWrongSelect() {
+		final String link = "https://lena.ru";
+		presenter.onSelect(link);
+		verify(mockDetailsView, never()).browse(link);
+	}
 }
 

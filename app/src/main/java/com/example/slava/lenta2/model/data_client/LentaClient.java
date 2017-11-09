@@ -14,65 +14,68 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
  * Created by slava on 29.08.2017.
  */
 
-public class LentaClient {
-    private static final String BASE_URL = "http://lenta.ru/";
-    private static LentaClient client;
-    private LentaApi lentaApi;
-    private IPreExecuteSchedulerProvider schedulerProvider;
+public
+class LentaClient
+{
+	private static final String BASE_URL = "http://lenta.ru/";
+	private static LentaClient client;
+	private final LentaApi lentaApi;
+	private final IPreExecuteSchedulerProvider schedulerProvider;
 
-    /*Не знаю, как передать schedulerProvider в конструктор так, чтобы getInstance оставался без
-    * параметров*/
-    private LentaClient(){
+	private
+	LentaClient(final IPreExecuteSchedulerProvider schedulerProvider) {
+		final Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
+				.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+				.addConverterFactory(SimpleXmlConverterFactory.create())
+				.build();
+		lentaApi = retrofit.create(LentaApi.class);
+		this.schedulerProvider = schedulerProvider;
+	}
 
-    }
+	public static
+	LentaClient getInstance() {
+		if (client != null) {
+			return client;
+		}
+		client = new LentaClient(new PreExecuteSchedulerProvider());
+		return client;
+	}
 
-    private LentaClient(IPreExecuteSchedulerProvider schedulerProvider) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
-        lentaApi = retrofit.create(LentaApi.class);
-        this.schedulerProvider = schedulerProvider;
-    }
+	private
+	Observable<List<DataDTO>> getHottest() {
+		return lentaApi
+				.getHottest()
+				.flatMap(seed -> Observable.just(seed.getData()))
+				.subscribeOn(schedulerProvider.getScheduler());
+	}
 
-    public static LentaClient getInstance(){
-        if (client != null)
-            return client;
-        client = new LentaClient(new PreExecuteSchedulerProvider());
-        return client;
-    }
+	private
+	Observable<List<DataDTO>> getNewest() {
+		return lentaApi
+				.getNewest()
+				.flatMap(seed -> Observable.just(seed.getData()))
+				.subscribeOn(schedulerProvider.getScheduler());
+	}
 
-    private Observable<List<DataDTO>> getHottest(){
-        return lentaApi
-                .getHottest()
-                .flatMap(seed -> Observable.just(seed.getData()))
-                .subscribeOn(schedulerProvider.getScheduler());
-    }
+	private
+	Observable<List<DataDTO>> getAll() {
+		return lentaApi
+				.getAll()
+				.flatMap(seed -> Observable.just(seed.getData()))
+				.subscribeOn(schedulerProvider.getScheduler());
+	}
 
-    private Observable<List<DataDTO>> getNewest(){
-        return lentaApi
-                .getNewest()
-                .flatMap(seed -> Observable.just(seed.getData()))
-                .subscribeOn(schedulerProvider.getScheduler());
-    }
-
-    private Observable<List<DataDTO>> getAll(){
-        return lentaApi
-                .getAll()
-                .flatMap(seed -> Observable.just(seed.getData()))
-                .subscribeOn(schedulerProvider.getScheduler());
-    }
-
-    public Observable<List<DataDTO>> get(int i){
-        switch (i){
-            case 0:
-                return getHottest();
-            case 1:
-                return getNewest();
-            case 2:
-                return getAll();
-        }
-        return null;
-    }
+	public
+	Observable<List<DataDTO>> get(final int i) {
+		switch (i) {
+			case 0:
+				return getHottest();
+			case 1:
+				return getNewest();
+			case 2:
+				return getAll();
+		}
+		return null;
+	}
 
 }

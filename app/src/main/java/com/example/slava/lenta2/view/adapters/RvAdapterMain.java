@@ -20,98 +20,110 @@ import java.util.List;
  * Created by slava on 29.08.2017.
  */
 
-public class RvAdapterMain extends RecyclerView.Adapter<RvAdapterMain.ViewHolder> {
-    private final ArrayList<String> titles;
-    private final IMainFragmentPresenter fragmentPresenter;
-    private final RvAdapterItem.OnItemSelectedListener insideListener;
-    private ArrayList<RvAdapterItem> insideAdapters;
-    private List<List<Data>> allDatas = new ArrayList<>();
+public
+class RvAdapterMain
+		extends RecyclerView.Adapter<RvAdapterMain.ViewHolder>
+{
+	private final ArrayList<String> titles;
+	private final IMainFragmentPresenter fragmentPresenter;
+	private final RvAdapterItem.OnItemSelectedListener insideListener;
+	private final ArrayList<RvAdapterItem> insideAdapters;
+	private List<List<Data>> mLists = new ArrayList<>();
 
-    public RvAdapterMain(ArrayList<String> titles,
-                         IMainFragmentPresenter fragmentPresenter,
-                         RvAdapterItem.OnItemSelectedListener insideListener) {
-        this.titles = titles;
-        this.fragmentPresenter = fragmentPresenter;
-        this.insideListener = insideListener;
-        this.insideAdapters = new ArrayList<>();
-    }
+	public
+	RvAdapterMain(final ArrayList<String> titles,
+	              final IMainFragmentPresenter fragmentPresenter,
+	              final RvAdapterItem.OnItemSelectedListener insideListener) {
+		this.titles = titles;
+		this.fragmentPresenter = fragmentPresenter;
+		this.insideListener = insideListener;
+		insideAdapters = new ArrayList<>();
+	}
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        return new ViewHolder(view);
-    }
+	@Override
+	public
+	ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+		final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+		return new ViewHolder(view);
+	}
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        final boolean includeDesc;
-        holder.tvTitle.setText(titles.get(position));
-        holder.btnView.setOnClickListener(v -> fragmentPresenter.onViewClicked(position));
-        if (position == 0){
-            holder.rv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-            includeDesc = true;
-        }
-        else {
-            holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-            includeDesc = false;
-        }
+	@Override
+	public
+	void onBindViewHolder(final ViewHolder holder, final int position) {
+		final boolean includeDesc;
+		holder.tvTitle.setText(titles.get(position));
+		holder.btnView.setOnClickListener(v -> fragmentPresenter.onViewClicked(position));
+		if (position == 0) {
+			holder.rv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+			includeDesc = true;
+		} else {
+			holder.rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+			includeDesc = false;
+		}
 
-        if (insideAdapters.size() <= position) {
-            RvAdapterItem adapter = new RvAdapterItem(allDatas.get(position), includeDesc, false, insideListener);
-            insideAdapters.add(adapter);
-        }
-        holder.rv.setAdapter(insideAdapters.get(position));
-    }
+		if (insideAdapters.size() <= position) {
+			final RvAdapterItem adapter = new RvAdapterItem(mLists.get(position), includeDesc, false, insideListener);
+			insideAdapters.add(adapter);
+		}
+		holder.rv.setAdapter(insideAdapters.get(position));
+	}
 
     /*public void setInsideAdapter(ViewHolder holder,
-                                  List<DataDTO> datas,
+                                  List<DataDTO> dataDTOList,
                                   boolean includeDesc,
                                   RvAdapterItem.OnItemSelectedListener insideListener){
-        holder.rv.setAdapter(new RvAdapterItem(datas, includeDesc, false, insideListener));
+        holder.rv.setAdapter(new RvAdapterItem(dataDTOList, includeDesc, false, insideListener));
     }*/
 
-    @Override
-    public int getItemCount() {
-        return (allDatas == null) ? 0 : allDatas.size();
-    }
+	@Override
+	public
+	int getItemCount() {
+		return (mLists == null) ? 0 : mLists.size();
+	}
 
-    public void addDatas(List<Data> data){
-        if (isValid(data)){
-            this.allDatas.add(data);
-            notifyDataSetChanged();
-        }
-    }
+	/*public
+	void addData(final List<Data> data) {
+		if (isValid(data)) {
+			mLists.add(data);
+			notifyDataSetChanged();
+		}
+	}*/
 
-    public void setAllDatas(List<List<Data>> datas){
-        if (isValid(datas)){
-            if (this.allDatas.size() == 0) {
-                this.allDatas = datas;
-                notifyDataSetChanged();
-            }
-            else {
-                this.allDatas = datas;
-                for (int i = 0; i < insideAdapters.size(); i++){
-                    insideAdapters.get(i).refreshDatas(allDatas.get(i));
-                }
-            }
-        }
-    }
+	public
+	void setLists(final List<List<Data>> lists) {
+		if (isValid(lists)) {
+			if (mLists.size() == 0) {
+				mLists = lists;
+				notifyDataSetChanged();
+			} else {
+				mLists = lists;
+				for (int i = 0; i < insideAdapters.size(); i++) {
+					insideAdapters.get(i).refreshData(mLists.get(i));
+				}
+			}
+		}
+	}
 
-    private boolean isValid(List datas){
-        return !(datas == null || datas.isEmpty());
-    }
+	private
+	boolean isValid(final List list) {
+		return !(list == null || list.isEmpty());
+	}
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTitle;
-        private Button btnView;
-        private RecyclerView rv;
+	public
+	class ViewHolder
+			extends RecyclerView.ViewHolder
+	{
+		private final TextView tvTitle;
+		private final Button btnView;
+		private final RecyclerView rv;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            tvTitle = (TextView) itemView.findViewById(R.id.tvFmtTitle);
-            btnView = (Button) itemView.findViewById(R.id.btnFmtView);
-            rv = (RecyclerView)itemView.findViewById(R.id.rv_item);
-        }
-    }
+		private
+		ViewHolder(final View itemView) {
+			super(itemView);
+			tvTitle = (TextView) itemView.findViewById(R.id.tvFmtTitle);
+			btnView = (Button) itemView.findViewById(R.id.btnFmtView);
+			rv = (RecyclerView) itemView.findViewById(R.id.rv_item);
+		}
+	}
 
 }

@@ -25,67 +25,79 @@ import java.util.List;
  * Created by slava on 07.09.2017.
  */
 
-public class DetailsFragment extends BaseFragment implements IDetailsFragmentView {
-    private static final String MAIN_PRESENTER = "main_presenter";
-    private static final String TITLE = "title";
-    private IDetailsFragmentPresenter presenter;
-    private RecyclerView recyclerView;
-    private RvAdapterItem adapter;
+public
+class DetailsFragment
+		extends BaseFragment
+		implements IDetailsFragmentView
+{
+	private static final String MAIN_PRESENTER = "main_presenter";
+	private static final String TITLE = "title";
+	private IDetailsFragmentPresenter presenter;
+	private RecyclerView recyclerView;
+	private RvAdapterItem adapter;
 
-    public static DetailsFragment getInstance(String title, IMainActivityPresenter mainPresenter) {
-        DetailsFragment fragment = new DetailsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(MAIN_PRESENTER, mainPresenter);
-        bundle.putString(TITLE, title);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
+	public static
+	DetailsFragment getInstance(final String title, final IMainActivityPresenter mainPresenter) {
+		final DetailsFragment fragment = new DetailsFragment();
+		final Bundle bundle = new Bundle();
+		bundle.putParcelable(MAIN_PRESENTER, mainPresenter);
+		bundle.putString(TITLE, title);
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-        String title = getArguments().getString(TITLE);
-        IMainActivityPresenter mainPresenter = (IMainActivityPresenter) getArguments().getParcelable(MAIN_PRESENTER);
-        presenter = new DetailsFragmentPresenter(this,
-                mainPresenter,
-                title,
-                new TitlesClient(),
-                LentaClient.getInstance(),
-                new PostExecuteSchedulerProvider());
-    }
+	@Override
+	public
+	void onCreate(@Nullable final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+		final String title = getArguments().getString(TITLE);
+		final IMainActivityPresenter mainPresenter = (IMainActivityPresenter) getArguments().getParcelable(MAIN_PRESENTER);
+		presenter = new DetailsFragmentPresenter(
+				this,
+				mainPresenter,
+				title,
+				new TitlesClient(),
+				LentaClient.getInstance(),
+				new PostExecuteSchedulerProvider()
+		);
+	}
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+	@Nullable
+	@Override
+	public
+	View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, final Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment, container, false);
-        recyclerView = (RecyclerView)view.findViewById(R.id.rv_main);
-        recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        presenter.onCreateView(savedInstanceState, this);
+		final View view = inflater.inflate(R.layout.fragment, container, false);
+		recyclerView = (RecyclerView) view.findViewById(R.id.rv_main);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getBaseContext()));
+		presenter.onCreateView(savedInstanceState, this);
 
-        refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeLayout);
-        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
-        refreshLayout.setOnRefreshListener(() -> presenter.refresh());
+		refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeLayout);
+		refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+		refreshLayout.setOnRefreshListener(() -> presenter.refresh());
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        presenter.onDestroyView();
-    }
+	@Override
+	public
+	void onDestroyView() {
+		super.onDestroyView();
+		presenter.onDestroyView();
+	}
 
-    @Override
-    public void showDatas(List<Data> datas, RvAdapterItem.OnItemSelectedListener listener) {
-        adapter = new RvAdapterItem(datas, true, true, listener);
-        recyclerView.setAdapter(adapter);
-    }
+	@Override
+	public
+	void showData(final List<Data> dataList, final RvAdapterItem.OnItemSelectedListener listener) {
+		adapter = new RvAdapterItem(dataList, true, true, listener);
+		recyclerView.setAdapter(adapter);
+	}
 
-    @Override
-    public void refreshDatas(List<Data> datas) {
-        adapter.refreshDatas(datas);
-    }
+	@Override
+	public
+	void refreshData(final List<Data> dataList) {
+		adapter.refreshData(dataList);
+	}
 
 }

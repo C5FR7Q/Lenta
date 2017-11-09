@@ -10,71 +10,85 @@ import org.simpleframework.xml.Root;
  */
 
 @Root(name = "item", strict = false)
-public class DataDTO {
-    @Element(name = "link")
-    private String link;
+public
+class DataDTO
+{
+	@Element(name = "link")
+	private String link;
 
-    @Element(name = "title")
-    private String title;
+	@Element(name = "title")
+	private String title;
 
-    @Element(name = "description")
-    private String description;
+	@Element(name = "description")
+	private String description;
 
-    @Element(name = "pubDate")
-    private String pubDate;
+	@Element(name = "pubDate")
+	private String pubDate;
 
-    @Path(value = "enclosure")
-    @Attribute(name = "url")
-    private String picLink;
+	@Path(value = "enclosure")
+	@Attribute(name = "url")
+	private String picLink;
 
-    @Element(name = "category", required = false)
-    private String category;
+	@Element(name = "category", required = false)
+	private String category;
 
-    public String getPicLink() {
-        return picLink;
-    }
+	public
+	DataDTO() {
+	}
 
-    public String getLink() {
-        return link;
-    }
+	public
+	DataDTO(final String link,
+	        final String title,
+	        final String description,
+	        final String pubDate,
+	        final String picLink,
+	        final String category) {
+		this.link = link;
+		this.title = title;
+		this.description = description;
+		this.pubDate = pubDate;
+		this.picLink = picLink;
+		this.category = category;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public
+	String getPicLink() {
+		return picLink;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public
+	String getLink() {
+		return link;
+	}
 
-    public String getPubDate() {
-        return pubDate.substring(0, pubDate.length() - 5);
-    }
+	public
+	String getTitle() {
+		return title;
+	}
 
-    public String getCategory() {
-        return category;
-    }
+	public
+	String getDescription() {
+		return description;
+	}
 
-    public void setLink(String link) {
-        this.link = link;
-    }
+	public
+	String getPubDate() {
+		return pubDate.substring(0, pubDate.length() - 5);
+	}
 
-    public void setPicLink(String picLink) {
-        this.picLink = picLink;
-    }
+	public
+	String getCategory() {
+		return category;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public
+	void setLink(final String link) {
+		this.link = link;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public
+	void setTitle(final String title) {
+		this.title = title;
+	}
 
-    public void setPubDate(String pubDate) {
-        this.pubDate = pubDate;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 }
