@@ -21,4 +21,5 @@ interface IMainFragmentPresenter
 	void refresh();
 
 	void onSelect(String link);
+
 }
