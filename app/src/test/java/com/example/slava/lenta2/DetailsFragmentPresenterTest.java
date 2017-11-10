@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import io.reactivex.Observable;
 
@@ -54,7 +53,7 @@ class DetailsFragmentPresenterTest
 				new TitlesClient().getTitles().get(0),
 				new TitlesClient(),
 				mockLentaClient,
-				new TestPostExecuteSchedulerProvider()
+				new TestSchedulerProvider()
 		);
 	}
 
@@ -64,6 +63,7 @@ class DetailsFragmentPresenterTest
 	void testOnCreateView() {
 		when(mockLentaClient.get(anyInt() % 3))
 				.thenReturn(Observable.just(new ArrayList<>()));
+		when(mockDetailsView.hasInternetConnection()).thenReturn(true);
 		presenter.onCreateView(mock(Bundle.class), mockDetailsView);
 		verify(mockMainPresenter).showProgressDialog();
 		verify(mockLentaClient, only()).get(anyInt() % 3);

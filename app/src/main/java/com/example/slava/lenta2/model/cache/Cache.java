@@ -8,6 +8,7 @@ import com.example.slava.lenta2.other.PreExecuteSchedulerProvider;
 import com.example.slava.lenta2.view.Data;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -55,7 +56,8 @@ class Cache
 				e.onNext(data);
 				e.onComplete();
 			} else {
-				e.onError(new Exception("Empty cache."));
+				e.onNext(Collections.emptyList());
+				e.onComplete();
 			}
 		});
 		return observable.subscribeOn(mSchedulerProvider.getScheduler());

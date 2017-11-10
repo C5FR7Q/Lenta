@@ -58,7 +58,9 @@ class Repository
 					.map(mMapper)
 					.toList()
 					.toObservable();
-			compositeDisposable.add(result.subscribe(lists -> compositeDisposable.add(mCache.putDataList(lists))));
+			compositeDisposable.add(result.subscribe(
+					lists -> compositeDisposable.add(mCache.putDataList(lists))
+			));
 		} else {
 			result = mCache.getDataList();
 		}

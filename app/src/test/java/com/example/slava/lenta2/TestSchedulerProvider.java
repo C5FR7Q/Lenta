@@ -9,10 +9,13 @@ import io.reactivex.schedulers.Schedulers;
  * Created by slava on 01.10.2017.
  */
 
-public class TestPostExecuteSchedulerProvider implements ISchedulerProvider
+public
+class TestSchedulerProvider
+		implements ISchedulerProvider
 {
-    @Override
-    public Scheduler getScheduler() {
-        return Schedulers.trampoline();
-    }
+	@Override
+	public
+	Scheduler getScheduler() {
+		return Schedulers.trampoline();
+	}
 }
