@@ -1,7 +1,7 @@
 package com.example.slava.lenta2.repository;
 
-import com.example.slava.lenta2.Util;
 import com.example.slava.lenta2.TestSchedulerProvider;
+import com.example.slava.lenta2.Util;
 import com.example.slava.lenta2.model.cache.Cache;
 import com.example.slava.lenta2.model.data_client.DataDTO;
 import com.example.slava.lenta2.model.data_client.LentaClient;
@@ -22,7 +22,6 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,30 +39,28 @@ class RepositoryTest
 	@Mock
 	private
 	Cache mCache;
-	@Mock
-	private DataListMapper mMapper;
 
 	private Repository mRepository;
 
 	@Before
 	public
 	void setUp() throws Exception {
-		List<List<DataDTO>> listWithInternet = new ArrayList<>();
-		listWithInternet.add(Util.getListDataDTO(mock(DataDTO.class)));
-		listWithInternet.add(Util.getListDataDTO(mock(DataDTO.class)));
-		listWithInternet.add(Util.getListDataDTO(mock(DataDTO.class)));
+		final List<List<DataDTO>> listWithInternet = new ArrayList<>();
+		listWithInternet.add(Util.getListDataDTO(Util.getDataDTO(), Util.getDataDTO()));
+		listWithInternet.add(Util.getListDataDTO(Util.getDataDTO(), Util.getDataDTO()));
+		listWithInternet.add(Util.getListDataDTO(Util.getDataDTO(), Util.getDataDTO()));
 
-		List<List<Data>> listWithoutInternet = new ArrayList<>();
-		listWithoutInternet.add(Util.getListData(mock(Data.class)));
-		listWithoutInternet.add(Util.getListData(mock(Data.class)));
-		listWithoutInternet.add(Util.getListData(mock(Data.class)));
+		final List<List<Data>> listWithoutInternet = new ArrayList<>();
+		listWithoutInternet.add(Util.getListData(Util.getData(), Util.getData()));
+		listWithoutInternet.add(Util.getListData(Util.getData(), Util.getData()));
+		listWithoutInternet.add(Util.getListData(Util.getData(), Util.getData()));
 
-		mRepository = new Repository(mLentaClient, mCache, mMapper, new TestSchedulerProvider());
+		mRepository = new Repository(mLentaClient, mCache, new DataListMapper(), new TestSchedulerProvider());
 		mRepository.setCompositeDisposable(new CompositeDisposable());
 
 		when(mLentaClient.getLists()).thenReturn(Observable.just(listWithInternet));
 		when(mCache.getDataList()).thenReturn(Observable.just(listWithoutInternet));
-//		when(mMapper.apply(any())).thenReturn();
+		when(mCache.putDataList(any())).thenReturn(Observable.just(0).subscribe());
 	}
 
 	@Test

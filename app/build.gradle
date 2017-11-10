@@ -40,6 +40,10 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    //Lorem - for testing
+    compile 'com.thedeanda:lorem:2.1'
+
     compile ('com.squareup.retrofit2:converter-simplexml:2.3.0'){
         exclude module: 'xpp3'
         exclude module: 'stax-api'
