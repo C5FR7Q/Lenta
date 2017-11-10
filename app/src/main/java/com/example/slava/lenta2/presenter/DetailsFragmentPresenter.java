@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.DataListMapper;
-import com.example.slava.lenta2.other.IPostExecuteSchedulerProvider;
+import com.example.slava.lenta2.other.ISchedulerProvider;
 import com.example.slava.lenta2.view.fragment.BaseFragment;
 import com.example.slava.lenta2.view.fragment.IDetailsFragmentView;
 
@@ -25,7 +25,7 @@ class DetailsFragmentPresenter
 	private final DataListMapper mapper;
 	private IDetailsFragmentView detailsFragmentView;
 	private final IMainActivityPresenter mainPresenter;
-	private final IPostExecuteSchedulerProvider postExecuteSchedulerProvider;
+	private final ISchedulerProvider postExecuteSchedulerProvider;
 	private CompositeDisposable disposables;
 
 	public
@@ -34,7 +34,7 @@ class DetailsFragmentPresenter
 	                         final String title,
 	                         final ITitlesClient titlesClient,
 	                         final LentaClient lentaClient,
-	                         final IPostExecuteSchedulerProvider postExecuteSchedulerProvider) {
+	                         final ISchedulerProvider postExecuteSchedulerProvider) {
 		this.detailsFragmentView = detailsFragmentView;
 		this.mainPresenter = mainPresenter;
 		this.title = title;

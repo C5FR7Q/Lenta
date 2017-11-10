@@ -3,15 +3,13 @@ package com.example.slava.lenta2.repository;
 import com.example.slava.lenta2.model.cache.ICache;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.other.DataListMapper;
+import com.example.slava.lenta2.other.ISchedulerProvider;
 import com.example.slava.lenta2.view.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by vva on 09/11/2017.
@@ -22,52 +20,48 @@ class Repository
 		implements IRepository
 {
 	private final
-	boolean hasInternetConnection;
-	private final
 	LentaClient mLentaClient;
 	private final
 	ICache mCache;
-	private final CompositeDisposable compositeDisposable;
+	private
+	CompositeDisposable compositeDisposable;
+	private final
+	DataListMapper mMapper;
+	private final
+	ISchedulerProvider mSchedulerProvider;
 
 	public
-	Repository(final boolean hasInternetConnection,
-	           final LentaClient lentaClient,
+	Repository(final LentaClient lentaClient,
 	           final ICache cache,
-	           final CompositeDisposable compositeDisposable) {
-		this.hasInternetConnection = hasInternetConnection;
-		this.compositeDisposable = compositeDisposable;
+	           final DataListMapper mapper,
+	           final ISchedulerProvider schedulerProvider) {
 		mLentaClient = lentaClient;
 		mCache = cache;
+		mMapper = mapper;
+		mSchedulerProvider = schedulerProvider;
 	}
 
-	@Override
 	public
-	PublishSubject<List<Data>> getAllData() {
-		final PublishSubject<List<Data>> subject = PublishSubject.create();
-		if (hasInternetConnection) {
-			final List<List<Data>> lists = new ArrayList<>();
-			for (int i = 0; i < 3; i++) {
-				compositeDisposable.add(mLentaClient.get(i)
-						.map(new DataListMapper())
-						.subscribeOn(Schedulers.io())
-						.subscribe(e -> {
-							subject.onNext(e);
+	void setCompositeDisposable(final CompositeDisposable compositeDisposable) {
+		this.compositeDisposable = compositeDisposable;
+	}
 
-							if (lists.size() == 3) {
-								final Disposable d = mCache.putDataList(lists);
-								if (d != null) {
-									compositeDisposable.add(d);
-								}
-							}
-						}));
-			}
-		} else {
-			mCache.getDataList().forEach(lists -> {
-				for (List<Data> list: lists){
-					subject.onNext(list);
-				}
-			});
+	public
+	Observable<List<List<Data>>> getAllDataObservable(final boolean hasInternetConnection) {
+		final Observable<List<List<Data>>> result;
+		if (compositeDisposable == null) {
+			return Observable.empty();
 		}
-		return subject;
+		if (hasInternetConnection) {
+			result = mLentaClient.getLists()
+					.flatMapIterable(lists -> lists)
+					.map(mMapper)
+					.toList()
+					.toObservable();
+			compositeDisposable.add(result.subscribe(lists -> compositeDisposable.add(mCache.putDataList(lists))));
+		} else {
+			result = mCache.getDataList();
+		}
+		return result.subscribeOn(mSchedulerProvider.getScheduler());
 	}
 }

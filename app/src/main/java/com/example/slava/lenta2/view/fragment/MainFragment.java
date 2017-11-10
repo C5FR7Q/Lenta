@@ -14,7 +14,9 @@ import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.cache.Cache;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
+import com.example.slava.lenta2.other.DataListMapper;
 import com.example.slava.lenta2.other.PostExecuteSchedulerProvider;
+import com.example.slava.lenta2.other.PreExecuteSchedulerProvider;
 import com.example.slava.lenta2.presenter.IMainActivityPresenter;
 import com.example.slava.lenta2.presenter.IMainFragmentPresenter;
 import com.example.slava.lenta2.presenter.MainFragmentPresenter;
@@ -51,14 +53,13 @@ class MainFragment
 	void onCreate(@Nullable final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-		final IMainActivityPresenter mainPresenter = (IMainActivityPresenter) getArguments().getParcelable(MAIN_PRESENTER);
+		final IMainActivityPresenter mainPresenter = getArguments().getParcelable(MAIN_PRESENTER);
 		fragmentPresenter = new MainFragmentPresenter(
 				this,
 				mainPresenter,
 				new TitlesClient(),
-				LentaClient.getInstance(),
 				new PostExecuteSchedulerProvider(),
-				new Cache(getActivity())
+				new Repository(LentaClient.getInstance(), new Cache(getActivity()), new DataListMapper(), new PreExecuteSchedulerProvider())
 		);
 		fragmentPresenter.onCreate(savedInstanceState);
 		adapter = new RvAdapterMain(

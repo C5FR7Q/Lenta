@@ -3,7 +3,7 @@ package com.example.slava.lenta2.model.cache;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.example.slava.lenta2.other.IPreExecuteSchedulerProvider;
+import com.example.slava.lenta2.other.ISchedulerProvider;
 import com.example.slava.lenta2.other.PreExecuteSchedulerProvider;
 import com.example.slava.lenta2.view.Data;
 
@@ -27,11 +27,11 @@ class Cache
 	private final File filePath;
 	private final FileManager fileManager;
 	private final Serializer serializer;
-	private final IPreExecuteSchedulerProvider preExecuteSchedulerProvider;
+	private final ISchedulerProvider mSchedulerProvider;
 
 	public
 	Cache(@NonNull final Context context) {
-		preExecuteSchedulerProvider = new PreExecuteSchedulerProvider();
+		mSchedulerProvider = new PreExecuteSchedulerProvider();
 		fileManager = new FileManager();
 		serializer = new Serializer();
 		filePath = buildFilePath(context.getCacheDir());
@@ -58,7 +58,7 @@ class Cache
 				e.onError(new Exception("Empty cache."));
 			}
 		});
-		return observable.subscribeOn(preExecuteSchedulerProvider.getScheduler());
+		return observable.subscribeOn(mSchedulerProvider.getScheduler());
 	}
 
 	@Override
@@ -67,7 +67,7 @@ class Cache
 		if (!data.isEmpty()) {
 			final String json = serializer.serialize(data);
 			return Observable.fromCallable(new Writer(json, fileManager, filePath))
-					.subscribeOn(preExecuteSchedulerProvider.getScheduler())
+					.subscribeOn(mSchedulerProvider.getScheduler())
 					.subscribe(aVoid -> {
 					}, throwable -> {
 					});

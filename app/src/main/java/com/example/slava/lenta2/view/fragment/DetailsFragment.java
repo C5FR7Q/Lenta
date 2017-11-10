@@ -52,7 +52,7 @@ class DetailsFragment
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		final String title = getArguments().getString(TITLE);
-		final IMainActivityPresenter mainPresenter = (IMainActivityPresenter) getArguments().getParcelable(MAIN_PRESENTER);
+		final IMainActivityPresenter mainPresenter = getArguments().getParcelable(MAIN_PRESENTER);
 		presenter = new DetailsFragmentPresenter(
 				this,
 				mainPresenter,

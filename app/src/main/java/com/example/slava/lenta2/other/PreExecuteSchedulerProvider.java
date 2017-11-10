@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public
 class PreExecuteSchedulerProvider
-		implements IPreExecuteSchedulerProvider
+		implements ISchedulerProvider
 {
 	@Override
 	public

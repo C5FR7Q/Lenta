@@ -68,13 +68,6 @@ class RvAdapterMain
 		holder.rv.setAdapter(insideAdapters.get(position));
 	}
 
-    /*public void setInsideAdapter(ViewHolder holder,
-                                  List<DataDTO> dataDTOList,
-                                  boolean includeDesc,
-                                  RvAdapterItem.OnItemSelectedListener insideListener){
-        holder.rv.setAdapter(new RvAdapterItem(dataDTOList, includeDesc, false, insideListener));
-    }*/
-
 	@Override
 	public
 	int getItemCount() {

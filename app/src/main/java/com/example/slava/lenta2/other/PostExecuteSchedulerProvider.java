@@ -9,7 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public
 class PostExecuteSchedulerProvider
-		implements IPostExecuteSchedulerProvider
+		implements ISchedulerProvider
 {
 	@Override
 	public
