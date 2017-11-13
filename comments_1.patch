@@ -1,0 +1,142 @@
+From 5eb9d51754f26caeecc811fb01775434b496c6e9 Mon Sep 17 00:00:00 2001
+From: Aleksey Ushakov <uas@tomsksoft.com>
+Date: Mon, 13 Nov 2017 10:11:27 +0700
+Subject: [PATCH] Comments 1
+
+---
+ .../slava/lenta2/repository/Repository.java        | 25 ++++++++++------------
+ .../slava/lenta2/view/adapters/RvAdapterMain.java  |  3 +++
+ .../lenta2/view/fragment/IBaseFragmentView.java    |  3 +++
+ .../slava/lenta2/view/fragment/MainFragment.java   | 10 +++++++--
+ .../slava/lenta2/repository/RepositoryTest.java    |  6 ++----
+ 5 files changed, 27 insertions(+), 20 deletions(-)
+
+diff --git a/app/src/main/java/com/example/slava/lenta2/repository/Repository.java b/app/src/main/java/com/example/slava/lenta2/repository/Repository.java
+index 874d03c..2103159 100644
+--- a/app/src/main/java/com/example/slava/lenta2/repository/Repository.java
++++ b/app/src/main/java/com/example/slava/lenta2/repository/Repository.java
+@@ -14,21 +14,17 @@ import io.reactivex.disposables.CompositeDisposable;
+ /**
+  * Created by vva on 09/11/2017.
+  */
+-
++/* uas: It is not a good approach to have such common names.
++Even if you have only one Repository in the project, it's name should tell you what data it is working with. */
+ public
+ class Repository
+ 		implements IRepository
+ {
+-	private final
+-	LentaClient mLentaClient;
+-	private final
+-	ICache mCache;
+-	private
+-	CompositeDisposable compositeDisposable;
+-	private final
+-	DataListMapper mMapper;
+-	private final
+-	ISchedulerProvider mSchedulerProvider;
++	private final LentaClient mLentaClient;
++	private final ICache mCache;
++	private CompositeDisposable compositeDisposable;
++	private final DataListMapper mMapper;
++	private final ISchedulerProvider mSchedulerProvider;
+ 
+ 	public
+ 	Repository(final LentaClient lentaClient,
+@@ -43,6 +39,7 @@ class Repository
+ 
+ 	public
+ 	void setCompositeDisposable(final CompositeDisposable compositeDisposable) {
++		/* uas: I don't think that loading process should interrupt on Presenter destroy. */
+ 		this.compositeDisposable = compositeDisposable;
+ 	}
+ 
+@@ -58,9 +55,9 @@ class Repository
+ 					.map(mMapper)
+ 					.toList()
+ 					.toObservable();
+-			compositeDisposable.add(result.subscribe(
+-					lists -> compositeDisposable.add(mCache.putDataList(lists))
+-			));
++			/* uas: Correct me if I am wrong, but doesn't that mean that loading from Web is performed twice?
++			Once here and the second time where the getAllDataObservable method is called? */
++			compositeDisposable.add(result.subscribe(lists -> compositeDisposable.add(mCache.putDataList(lists))));
+ 		} else {
+ 			result = mCache.getDataList();
+ 		}
+diff --git a/app/src/main/java/com/example/slava/lenta2/view/adapters/RvAdapterMain.java b/app/src/main/java/com/example/slava/lenta2/view/adapters/RvAdapterMain.java
+index 8141f52..0a95200 100644
+--- a/app/src/main/java/com/example/slava/lenta2/view/adapters/RvAdapterMain.java
++++ b/app/src/main/java/com/example/slava/lenta2/view/adapters/RvAdapterMain.java
+@@ -25,7 +25,10 @@ class RvAdapterMain
+ 		extends RecyclerView.Adapter<RvAdapterMain.ViewHolder>
+ {
+ 	private final ArrayList<String> titles;
++
++	/* uas: This is the violation of the Low coupling principe. You should use a Listener interface instead. */
+ 	private final IMainFragmentPresenter fragmentPresenter;
++
+ 	private final RvAdapterItem.OnItemSelectedListener insideListener;
+ 	private final ArrayList<RvAdapterItem> insideAdapters;
+ 	private List<List<Data>> mLists = new ArrayList<>();
+diff --git a/app/src/main/java/com/example/slava/lenta2/view/fragment/IBaseFragmentView.java b/app/src/main/java/com/example/slava/lenta2/view/fragment/IBaseFragmentView.java
+index 65cd449..c500d95 100644
+--- a/app/src/main/java/com/example/slava/lenta2/view/fragment/IBaseFragmentView.java
++++ b/app/src/main/java/com/example/slava/lenta2/view/fragment/IBaseFragmentView.java
+@@ -8,7 +8,10 @@ public
+ interface IBaseFragmentView
+ {
+ 	void setRefreshing(boolean isRefreshing);
++
++	/* uas: Should not be in the UI. ApplicationContext should be able to do it as well. */
+ 	boolean hasInternetConnection();
++
+ 	void browse(String link);
+ 	void showMessage(String msg);
+ }
+diff --git a/app/src/main/java/com/example/slava/lenta2/view/fragment/MainFragment.java b/app/src/main/java/com/example/slava/lenta2/view/fragment/MainFragment.java
+index 1f663cb..b36f174 100644
+--- a/app/src/main/java/com/example/slava/lenta2/view/fragment/MainFragment.java
++++ b/app/src/main/java/com/example/slava/lenta2/view/fragment/MainFragment.java
+@@ -59,11 +59,17 @@ class MainFragment
+ 				mainPresenter,
+ 				new TitlesClient(),
+ 				new PostExecuteSchedulerProvider(),
+-				new Repository(LentaClient.getInstance(), new Cache(getActivity()), new DataListMapper(), new PreExecuteSchedulerProvider())
++				/* uas: I think Repository should live longer than Presenter. */
++				new Repository(
++						LentaClient.getInstance(),
++						new Cache(getActivity()), /* uas: You should use Application instead of Activity everywhere it is possible to. */
++						new DataListMapper(),
++						new PreExecuteSchedulerProvider()
++				)
+ 		);
+ 		fragmentPresenter.onCreate(savedInstanceState);
+ 		adapter = new RvAdapterMain(
+-				new TitlesClient().getTitles(),
++				new TitlesClient().getTitles(), /* uas: There should not be direct calls to the Client in the View. */
+ 				fragmentPresenter,
+ 				link -> fragmentPresenter.onSelect(link)
+ 		);
+diff --git a/app/src/test/java/com/example/slava/lenta2/repository/RepositoryTest.java b/app/src/test/java/com/example/slava/lenta2/repository/RepositoryTest.java
+index 5ce572e..939d39d 100644
+--- a/app/src/test/java/com/example/slava/lenta2/repository/RepositoryTest.java
++++ b/app/src/test/java/com/example/slava/lenta2/repository/RepositoryTest.java
+@@ -34,11 +34,9 @@ public
+ class RepositoryTest
+ {
+ 	@Mock
+-	private
+-	LentaClient mLentaClient;
++	private LentaClient mLentaClient;
+ 	@Mock
+-	private
+-	Cache mCache;
++	private Cache mCache;
+ 
+ 	private Repository mRepository;
+ 
+-- 
+2.7.4
+

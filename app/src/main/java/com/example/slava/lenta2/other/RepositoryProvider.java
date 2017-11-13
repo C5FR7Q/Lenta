@@ -27,7 +27,7 @@ class RepositoryProvider
 	void init(final Context context) {
 		final DataRepository sDataRepository = new DataRepository(
 				LentaClient.getInstance(),
-				new Cache(context),
+				new Cache(context.getCacheDir()),
 				new DataListMapper(),
 				new PreExecuteSchedulerProvider()
 		);

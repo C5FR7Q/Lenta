@@ -1,6 +1,5 @@
 package com.example.slava.lenta2.model.cache;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.example.slava.lenta2.other.ISchedulerProvider;
@@ -10,7 +9,6 @@ import com.example.slava.lenta2.view.Data;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -31,11 +29,11 @@ class Cache
 	private final ISchedulerProvider mSchedulerProvider;
 
 	public
-	Cache(@NonNull final Context context) {
+	Cache(@NonNull final File cacheDir) {
 		mSchedulerProvider = new PreExecuteSchedulerProvider();
 		fileManager = new FileManager();
 		serializer = new Serializer();
-		filePath = buildFilePath(context.getCacheDir());
+		filePath = buildFilePath(cacheDir);
 	}
 
 	private
@@ -68,21 +66,15 @@ class Cache
 	Disposable putDataList(final List<List<Data>> data) {
 		if (!data.isEmpty()) {
 			final String json = serializer.serialize(data);
-			return Observable.fromCallable(new Writer(json, fileManager, filePath))
-					.subscribeOn(mSchedulerProvider.getScheduler())
-					.subscribe(aVoid -> {
-					}, throwable -> {
-					});
-			/*Важно, чтобы при ошибке ничего не происходило. Дело в том, что Callable<Void>
-			* в методе call должен содержать return. Вернуть можно только null. Тогда вышестоящая
-            * цепочка без указания throwable -> {} выбрасывает "Callable returned null"*/
+			return Observable.just(new Writer(json, fileManager, filePath))
+					.observeOn(mSchedulerProvider.getScheduler())
+					.subscribe(Writer::write);
 		}
 		return null;
 	}
 
 	private static
 	class Writer
-			implements Callable<Void>
 	{
 		private final String json;
 		private final FileManager fileManager;
@@ -95,11 +87,9 @@ class Cache
 			this.file = file;
 		}
 
-		@Override
-		public
-		Void call() throws Exception {
+		private
+		void write() {
 			fileManager.writeToFile(file, json);
-			return null;
 		}
 	}
 }
