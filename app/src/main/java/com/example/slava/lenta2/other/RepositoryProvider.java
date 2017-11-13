@@ -14,20 +14,32 @@ import com.example.slava.lenta2.repository.IDataRepository;
 public
 class RepositoryProvider
 {
-	private static IDataRepository sDataRepository;
+	private static RepositoryProvider instance;
+	private final IDataRepository sDataRepository;
+
+	private
+	RepositoryProvider(final IDataRepository sDataRepository) {
+		this.sDataRepository = sDataRepository;
+//		init other repositories, if need.
+	}
 
 	public static
 	void init(final Context context) {
-		sDataRepository = new DataRepository(
+		final DataRepository sDataRepository = new DataRepository(
 				LentaClient.getInstance(),
 				new Cache(context),
 				new DataListMapper(),
 				new PreExecuteSchedulerProvider()
 		);
-//		init other repositories, if need.
+		instance = new RepositoryProvider(sDataRepository);
 	}
 
 	public static
+	RepositoryProvider getInstance() {
+		return instance;
+	}
+
+	public
 	IDataRepository getDataRepository() {
 		return sDataRepository;
 	}

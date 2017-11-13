@@ -56,7 +56,7 @@ class MainFragment
 				mainPresenter,
 				new TitlesClient(),
 				new PostExecuteSchedulerProvider(),
-				RepositoryProvider.getDataRepository(),
+				RepositoryProvider.getInstance().getDataRepository(),
 				NetworkStateProvider.getInstance()
 
 				/* uas: I think DataRepository should live longer than Presenter. */
