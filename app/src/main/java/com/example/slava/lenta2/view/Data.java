@@ -70,4 +70,45 @@ class Data
 		this.title = title;
 	}
 
+	@Override
+	public
+	boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		final Data data = (Data) o;
+
+		if (link != null ? !link.equals(data.link) : data.link != null) {
+			return false;
+		}
+		if (title != null ? !title.equals(data.title) : data.title != null) {
+			return false;
+		}
+		if (description != null ? !description.equals(data.description) : data.description != null) {
+			return false;
+		}
+		if (pubDate != null ? !pubDate.equals(data.pubDate) : data.pubDate != null) {
+			return false;
+		}
+		if (picLink != null ? !picLink.equals(data.picLink) : data.picLink != null) {
+			return false;
+		}
+		return category != null ? category.equals(data.category) : data.category == null;
+	}
+
+	@Override
+	public
+	int hashCode() {
+		int result = link != null ? link.hashCode() : 0;
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (pubDate != null ? pubDate.hashCode() : 0);
+		result = 31 * result + (picLink != null ? picLink.hashCode() : 0);
+		result = 31 * result + (category != null ? category.hashCode() : 0);
+		return result;
+	}
 }
