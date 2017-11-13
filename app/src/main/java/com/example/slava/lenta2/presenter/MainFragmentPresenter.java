@@ -4,7 +4,8 @@ import android.os.Bundle;
 
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.ISchedulerProvider;
-import com.example.slava.lenta2.repository.IRepository;
+import com.example.slava.lenta2.other.NetworkStateProvider;
+import com.example.slava.lenta2.repository.IDataRepository;
 import com.example.slava.lenta2.view.Data;
 import com.example.slava.lenta2.view.fragment.BaseFragment;
 import com.example.slava.lenta2.view.fragment.DetailsFragment;
@@ -25,24 +26,27 @@ public
 class MainFragmentPresenter
 		implements IMainFragmentPresenter
 {
-	private final IRepository repository;
+	private final IDataRepository repository;
 	private IMainFragmentView fragmentView;
 	private final IMainActivityPresenter mainPresenter;
 	private final ITitlesClient titlesClient;
 	private final ISchedulerProvider postExecuteSchedulerProvider;
 	private CompositeDisposable disposables;
+	private final NetworkStateProvider mNetworkStateProvider;
 
 	public
 	MainFragmentPresenter(final IMainFragmentView fragmentView,
 	                      final IMainActivityPresenter mainPresenter,
 	                      final ITitlesClient titlesClient,
 	                      final ISchedulerProvider postExecuteSchedulerProvider,
-	                      final IRepository repository) {
+	                      final IDataRepository repository,
+	                      final NetworkStateProvider networkStateProvider) {
 		this.fragmentView = fragmentView;
 		this.mainPresenter = mainPresenter;
 		this.titlesClient = titlesClient;
 		this.postExecuteSchedulerProvider = postExecuteSchedulerProvider;
 		this.repository = repository;
+		mNetworkStateProvider = networkStateProvider;
 		disposables = new CompositeDisposable();
 	}
 
@@ -54,7 +58,7 @@ class MainFragmentPresenter
 	@Override
 	public
 	void onViewClicked(final int position) {
-		if (!fragmentView.hasInternetConnection()) {
+		if (!mNetworkStateProvider.hasInternetConnection()) {
 			fragmentView.showMessage(BaseFragment.MSG_NO_INTERNET);
 			return;
 		}
@@ -83,7 +87,7 @@ class MainFragmentPresenter
 
 	private
 	void setViewData(final Consumer<? super List<List<Data>>> task) {
-		final Observable<List<List<Data>>> allDataObservable = repository.getAllDataObservable(fragmentView.hasInternetConnection());
+		final Observable<List<List<Data>>> allDataObservable = repository.getAllDataObservable(mNetworkStateProvider.hasInternetConnection());
 		disposables.add(allDataObservable.observeOn(postExecuteSchedulerProvider.getScheduler())
 				.subscribe(task));
 	}
@@ -100,7 +104,7 @@ class MainFragmentPresenter
 	public
 	void refresh() {
 		fragmentView.setRefreshing(true);
-		if (!fragmentView.hasInternetConnection()) {
+		if (!mNetworkStateProvider.hasInternetConnection()) {
 			fragmentView.showMessage(BaseFragment.MSG_NO_INTERNET);
 			fragmentView.setRefreshing(false);
 			return;

@@ -12,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public
-interface IRepository
+interface IDataRepository
 {
 	Observable<List<List<Data>>> getAllDataObservable(boolean hasInternetConnection);
 	void setCompositeDisposable(CompositeDisposable disposable);

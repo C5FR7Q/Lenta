@@ -34,13 +34,11 @@ public
 class RepositoryTest
 {
 	@Mock
-	private
-	LentaClient mLentaClient;
+	private LentaClient mLentaClient;
 	@Mock
-	private
-	Cache mCache;
+	private Cache mCache;
 
-	private Repository mRepository;
+	private DataRepository mRepository;
 
 	@Before
 	public
@@ -55,7 +53,7 @@ class RepositoryTest
 		listWithoutInternet.add(Util.getListData(Util.getData(), Util.getData()));
 		listWithoutInternet.add(Util.getListData(Util.getData(), Util.getData()));
 
-		mRepository = new Repository(mLentaClient, mCache, new DataListMapper(), new TestSchedulerProvider());
+		mRepository = new DataRepository(mLentaClient, mCache, new DataListMapper(), new TestSchedulerProvider());
 		mRepository.setCompositeDisposable(new CompositeDisposable());
 
 		when(mLentaClient.getLists()).thenReturn(Observable.just(listWithInternet));

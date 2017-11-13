@@ -1,10 +1,7 @@
 package com.example.slava.lenta2.view.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.widget.Toast;
@@ -25,18 +22,6 @@ class BaseFragment
 	public
 	void setRefreshing(final boolean isRefreshing) {
 		refreshLayout.setRefreshing(isRefreshing);
-	}
-
-	@Override
-	public
-	boolean hasInternetConnection() {
-		final ConnectivityManager cm =
-				(ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = null;
-		if (cm != null) {
-			netInfo = cm.getActiveNetworkInfo();
-		}
-		return netInfo != null && netInfo.isConnectedOrConnecting();
 	}
 
 	@Override

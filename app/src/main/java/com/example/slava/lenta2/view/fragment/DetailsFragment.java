@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.example.slava.lenta2.R;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
+import com.example.slava.lenta2.other.NetworkStateProvider;
 import com.example.slava.lenta2.other.PostExecuteSchedulerProvider;
 import com.example.slava.lenta2.presenter.DetailsFragmentPresenter;
 import com.example.slava.lenta2.presenter.IDetailsFragmentPresenter;
@@ -59,7 +60,8 @@ class DetailsFragment
 				title,
 				new TitlesClient(),
 				LentaClient.getInstance(),
-				new PostExecuteSchedulerProvider()
+				new PostExecuteSchedulerProvider(),
+				NetworkStateProvider.getInstance()
 		);
 	}
 

@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.presenter.IMainFragmentPresenter;
+import com.example.slava.lenta2.model.titles_client.TitlesClient;
 import com.example.slava.lenta2.view.Data;
 
 import java.util.ArrayList;
@@ -24,18 +24,27 @@ public
 class RvAdapterMain
 		extends RecyclerView.Adapter<RvAdapterMain.ViewHolder>
 {
+	public
+	interface OnViewBtnClickListener
+	{
+		void onViewBtnClicked(int position);
+	}
+
 	private final ArrayList<String> titles;
-	private final IMainFragmentPresenter fragmentPresenter;
+
+	/* uas: This is the violation of the Low coupling principe. You should use a OnViewBtnClickListener interface instead. */
+
+	private final OnViewBtnClickListener mViewBtnClickListener;
 	private final RvAdapterItem.OnItemSelectedListener insideListener;
 	private final ArrayList<RvAdapterItem> insideAdapters;
 	private List<List<Data>> mLists = new ArrayList<>();
 
 	public
-	RvAdapterMain(final ArrayList<String> titles,
-	              final IMainFragmentPresenter fragmentPresenter,
+	RvAdapterMain(final TitlesClient titlesClient,
+	              final OnViewBtnClickListener viewBtnClickListener,
 	              final RvAdapterItem.OnItemSelectedListener insideListener) {
-		this.titles = titles;
-		this.fragmentPresenter = fragmentPresenter;
+		titles = titlesClient.getTitles();
+		mViewBtnClickListener = viewBtnClickListener;
 		this.insideListener = insideListener;
 		insideAdapters = new ArrayList<>();
 	}
@@ -52,7 +61,7 @@ class RvAdapterMain
 	void onBindViewHolder(final ViewHolder holder, final int position) {
 		final boolean includeDesc;
 		holder.tvTitle.setText(titles.get(position));
-		holder.btnView.setOnClickListener(v -> fragmentPresenter.onViewClicked(position));
+		holder.btnView.setOnClickListener(v -> mViewBtnClickListener.onViewBtnClicked(position));
 		if (position == 0) {
 			holder.rv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
 			includeDesc = true;

@@ -11,16 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.slava.lenta2.R;
-import com.example.slava.lenta2.model.cache.Cache;
-import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
-import com.example.slava.lenta2.other.DataListMapper;
+import com.example.slava.lenta2.other.NetworkStateProvider;
 import com.example.slava.lenta2.other.PostExecuteSchedulerProvider;
-import com.example.slava.lenta2.other.PreExecuteSchedulerProvider;
+import com.example.slava.lenta2.other.RepositoryProvider;
 import com.example.slava.lenta2.presenter.IMainActivityPresenter;
 import com.example.slava.lenta2.presenter.IMainFragmentPresenter;
 import com.example.slava.lenta2.presenter.MainFragmentPresenter;
-import com.example.slava.lenta2.repository.Repository;
 import com.example.slava.lenta2.view.Data;
 import com.example.slava.lenta2.view.adapters.RvAdapterMain;
 
@@ -59,12 +56,25 @@ class MainFragment
 				mainPresenter,
 				new TitlesClient(),
 				new PostExecuteSchedulerProvider(),
-				new Repository(LentaClient.getInstance(), new Cache(getActivity()), new DataListMapper(), new PreExecuteSchedulerProvider())
+				RepositoryProvider.getDataRepository(),
+				NetworkStateProvider.getInstance()
+
+				/* uas: I think DataRepository should live longer than Presenter. */
+/*
+				new DataRepository(
+						LentaClient.getInstance(),
+						new Cache(getActivity()), */
+/* uas: You should use Application instead of Activity everywhere it is possible to. *//*
+
+						new DataListMapper(),
+						new PreExecuteSchedulerProvider()
+				)
+*/
 		);
 		fragmentPresenter.onCreate(savedInstanceState);
 		adapter = new RvAdapterMain(
-				new TitlesClient().getTitles(),
-				fragmentPresenter,
+				new TitlesClient(), /* uas: There should not be direct calls to the Client in the View. */
+				position -> fragmentPresenter.onViewClicked(position),
 				link -> fragmentPresenter.onSelect(link)
 		);
 

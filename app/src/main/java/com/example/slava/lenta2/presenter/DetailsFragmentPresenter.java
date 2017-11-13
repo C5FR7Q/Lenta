@@ -6,6 +6,7 @@ import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.DataListMapper;
 import com.example.slava.lenta2.other.ISchedulerProvider;
+import com.example.slava.lenta2.other.NetworkStateProvider;
 import com.example.slava.lenta2.view.fragment.BaseFragment;
 import com.example.slava.lenta2.view.fragment.IDetailsFragmentView;
 
@@ -27,6 +28,7 @@ class DetailsFragmentPresenter
 	private final IMainActivityPresenter mainPresenter;
 	private final ISchedulerProvider postExecuteSchedulerProvider;
 	private CompositeDisposable disposables;
+	private final NetworkStateProvider mNetworkStateProvider;
 
 	public
 	DetailsFragmentPresenter(final IDetailsFragmentView detailsFragmentView,
@@ -34,13 +36,15 @@ class DetailsFragmentPresenter
 	                         final String title,
 	                         final ITitlesClient titlesClient,
 	                         final LentaClient lentaClient,
-	                         final ISchedulerProvider postExecuteSchedulerProvider) {
+	                         final ISchedulerProvider postExecuteSchedulerProvider,
+	                         final NetworkStateProvider networkStateProvider) {
 		this.detailsFragmentView = detailsFragmentView;
 		this.mainPresenter = mainPresenter;
 		this.title = title;
 		this.titlesClient = titlesClient;
 		this.lentaClient = lentaClient;
 		this.postExecuteSchedulerProvider = postExecuteSchedulerProvider;
+		mNetworkStateProvider = networkStateProvider;
 		mapper = new DataListMapper();
 	}
 
@@ -58,7 +62,7 @@ class DetailsFragmentPresenter
 	void onCreateView(final Bundle savedInstanceState, final IDetailsFragmentView view) {
 		disposables = new CompositeDisposable();
 		detailsFragmentView = view;
-		if (view.hasInternetConnection()) {
+		if (mNetworkStateProvider.hasInternetConnection()) {
 			mainPresenter.showProgressDialog();
 			for (int i = 0; i < titlesClient.getTitles().size(); i++) {
 				if (titlesClient.getTitles().get(i).equals(title)) {
@@ -87,7 +91,7 @@ class DetailsFragmentPresenter
 	public
 	void refresh() {
 		detailsFragmentView.setRefreshing(true);
-		if (!detailsFragmentView.hasInternetConnection()) {
+		if (!mNetworkStateProvider.hasInternetConnection()) {
 			detailsFragmentView.showMessage(BaseFragment.MSG_NO_INTERNET);
 			detailsFragmentView.setRefreshing(false);
 			return;

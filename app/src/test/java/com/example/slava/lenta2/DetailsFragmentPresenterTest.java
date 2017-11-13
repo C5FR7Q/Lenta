@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.model.titles_client.TitlesClient;
+import com.example.slava.lenta2.other.NetworkStateProvider;
 import com.example.slava.lenta2.presenter.DetailsFragmentPresenter;
 import com.example.slava.lenta2.presenter.MainActivityPresenter;
 import com.example.slava.lenta2.view.fragment.DetailsFragment;
@@ -41,8 +42,11 @@ class DetailsFragmentPresenterTest
 	private DetailsFragment mockDetailsView;
 	@Mock
 	private LentaClient mockLentaClient;
+	@Mock
+	private NetworkStateProvider mockNetworkStateProvider;
 
 	private DetailsFragmentPresenter presenter;
+
 
 	@Before
 	public
@@ -53,7 +57,8 @@ class DetailsFragmentPresenterTest
 				new TitlesClient().getTitles().get(0),
 				new TitlesClient(),
 				mockLentaClient,
-				new TestSchedulerProvider()
+				new TestSchedulerProvider(),
+				mockNetworkStateProvider
 		);
 	}
 
@@ -63,7 +68,7 @@ class DetailsFragmentPresenterTest
 	void testOnCreateView() {
 		when(mockLentaClient.get(anyInt() % 3))
 				.thenReturn(Observable.just(new ArrayList<>()));
-		when(mockDetailsView.hasInternetConnection()).thenReturn(true);
+		when(mockNetworkStateProvider.hasInternetConnection()).thenReturn(true);
 		presenter.onCreateView(mock(Bundle.class), mockDetailsView);
 		verify(mockMainPresenter).showProgressDialog();
 		verify(mockLentaClient, only()).get(anyInt() % 3);
