@@ -74,7 +74,6 @@ class MainFragmentPresenter
 	void onCreateView(final Bundle savedInstanceState, final IMainFragmentView view) {
 		fragmentView = view;
 		disposables = new CompositeDisposable();
-		repository.setCompositeDisposable(disposables);
 
 		setViewData(lists -> fragmentView.setDataLists(lists));
 	}

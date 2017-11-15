@@ -54,7 +54,6 @@ class RepositoryTest
 		listWithoutInternet.add(Util.getListData(Util.getData(), Util.getData()));
 
 		mRepository = new DataRepository(mLentaClient, mCache, new DataListMapper(), new TestSchedulerProvider());
-		mRepository.setCompositeDisposable(new CompositeDisposable());
 
 		when(mLentaClient.getLists()).thenReturn(Observable.just(listWithInternet));
 		when(mCache.getDataList()).thenReturn(Observable.just(listWithoutInternet));

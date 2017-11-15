@@ -9,7 +9,6 @@ import com.example.slava.lenta2.view.Data;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Created by vva on 09/11/2017.
@@ -20,9 +19,13 @@ class DataRepository
 {
 	private final LentaClient mLentaClient;
 	private final ICache mCache;
-	private CompositeDisposable compositeDisposable;
 	private final DataListMapper mMapper;
 	private final ISchedulerProvider mSchedulerProvider;
+	/*A little bit time and I've understood, that Subject isn't necessary there by next reasons:
+	* 1)I supposed it can influence on putting data to cache. wrong.
+	* If app had been closed before data written to cache, it wouldn't have helped anyway
+	* 2)It would be necessary ideally, but getData with false hasInternetConnection can be called only once. After initial setViewData
+	* in MainFragmentPresenter it won't be possible to getData from cache.*/
 
 	public
 	DataRepository(final LentaClient lentaClient,
@@ -37,28 +40,15 @@ class DataRepository
 
 	@Override
 	public
-	void setCompositeDisposable(final CompositeDisposable compositeDisposable) {
-		/* uas: I don't think that loading process should interrupt on Presenter destroy. */
-		/* Question: if no compositeDisposable here, woun't memory leak appear here? */
-		this.compositeDisposable = compositeDisposable;
-	}
-
-	@Override
-	public
 	Observable<List<List<Data>>> getData(final boolean hasInternetConnection) {
 		final Observable<List<List<Data>>> result;
-		if (compositeDisposable == null) {
-			return Observable.empty();
-		}
 		if (hasInternetConnection) {
 			result = mLentaClient.getLists()
 					.flatMapIterable(lists -> lists)
 					.map(mMapper)
 					.toList()
 					.toObservable();
-			/* uas: Correct me if I am wrong, but doesn't that mean that loading from Web is performed twice?
-			Once here and the second time where the getData method is called? */
-			compositeDisposable.add(result.subscribe(lists -> compositeDisposable.add(mCache.putDataList(lists))));
+			result.subscribe(mCache::putDataList);
 		} else {
 			result = mCache.getDataList();
 		}
