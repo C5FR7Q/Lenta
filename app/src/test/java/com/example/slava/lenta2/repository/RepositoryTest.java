@@ -64,14 +64,14 @@ class RepositoryTest
 	@Test
 	public
 	void getDataWithoutInternet() throws Exception {
-		mRepository.getAllDataObservable(false);
+		mRepository.getData(false);
 		verify(mCache, only()).getDataList();
 	}
 
 	@Test
 	public
 	void getDataWithInternet() throws Exception {
-		mRepository.getAllDataObservable(true);
+		mRepository.getData(true);
 		verify(mLentaClient, only()).getLists();
 		verify(mCache, only()).putDataList(any());
 	}

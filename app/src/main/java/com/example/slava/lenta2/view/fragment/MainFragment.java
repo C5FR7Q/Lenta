@@ -58,22 +58,10 @@ class MainFragment
 				new PostExecuteSchedulerProvider(),
 				RepositoryProvider.getInstance().getDataRepository(),
 				NetworkStateProvider.getInstance()
-
-				/* uas: I think DataRepository should live longer than Presenter. */
-/*
-				new DataRepository(
-						LentaClient.getInstance(),
-						new Cache(getActivity()), */
-/* uas: You should use Application instead of Activity everywhere it is possible to. *//*
-
-						new DataListMapper(),
-						new PreExecuteSchedulerProvider()
-				)
-*/
 		);
 		fragmentPresenter.onCreate(savedInstanceState);
 		adapter = new RvAdapterMain(
-				new TitlesClient(), /* uas: There should not be direct calls to the Client in the View. */
+				new TitlesClient(),
 				position -> fragmentPresenter.onViewClicked(position),
 				link -> fragmentPresenter.onSelect(link)
 		);

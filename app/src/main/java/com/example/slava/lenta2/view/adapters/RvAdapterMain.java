@@ -32,8 +32,6 @@ class RvAdapterMain
 
 	private final ArrayList<String> titles;
 
-	/* uas: This is the violation of the Low coupling principe. You should use a OnViewBtnClickListener interface instead. */
-
 	private final OnViewBtnClickListener mViewBtnClickListener;
 	private final RvAdapterItem.OnItemSelectedListener insideListener;
 	private final ArrayList<RvAdapterItem> insideAdapters;

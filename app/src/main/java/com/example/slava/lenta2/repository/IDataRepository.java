@@ -1,9 +1,5 @@
 package com.example.slava.lenta2.repository;
 
-import com.example.slava.lenta2.view.Data;
-
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -12,8 +8,9 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public
-interface IDataRepository
+interface IDataRepository<T>
+	/*Not sure, that there should be generics of T. May be <T extends<List<T>>> */
 {
-	Observable<List<List<Data>>> getAllDataObservable(boolean hasInternetConnection);
+	Observable<T> getData(boolean hasInternetConnection);
 	void setCompositeDisposable(CompositeDisposable disposable);
 }

@@ -14,11 +14,9 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * Created by vva on 09/11/2017.
  */
-/* uas: It is not a good approach to have such common names.
-Even if you have only one DataRepository in the project, it's name should tell you what data it is working with. */
 public
 class DataRepository
-		implements IDataRepository
+		implements IDataRepository<List<List<Data>>>
 {
 	private final LentaClient mLentaClient;
 	private final ICache mCache;
@@ -37,14 +35,17 @@ class DataRepository
 		mSchedulerProvider = schedulerProvider;
 	}
 
+	@Override
 	public
 	void setCompositeDisposable(final CompositeDisposable compositeDisposable) {
 		/* uas: I don't think that loading process should interrupt on Presenter destroy. */
+		/* Question: if no compositeDisposable here, woun't memory leak appear here? */
 		this.compositeDisposable = compositeDisposable;
 	}
 
+	@Override
 	public
-	Observable<List<List<Data>>> getAllDataObservable(final boolean hasInternetConnection) {
+	Observable<List<List<Data>>> getData(final boolean hasInternetConnection) {
 		final Observable<List<List<Data>>> result;
 		if (compositeDisposable == null) {
 			return Observable.empty();
@@ -56,7 +57,7 @@ class DataRepository
 					.toList()
 					.toObservable();
 			/* uas: Correct me if I am wrong, but doesn't that mean that loading from Web is performed twice?
-			Once here and the second time where the getAllDataObservable method is called? */
+			Once here and the second time where the getData method is called? */
 			compositeDisposable.add(result.subscribe(lists -> compositeDisposable.add(mCache.putDataList(lists))));
 		} else {
 			result = mCache.getDataList();

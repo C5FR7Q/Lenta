@@ -26,7 +26,7 @@ public
 class MainFragmentPresenter
 		implements IMainFragmentPresenter
 {
-	private final IDataRepository repository;
+	private final IDataRepository<List<List<Data>>> repository;
 	private IMainFragmentView fragmentView;
 	private final IMainActivityPresenter mainPresenter;
 	private final ITitlesClient titlesClient;
@@ -39,7 +39,7 @@ class MainFragmentPresenter
 	                      final IMainActivityPresenter mainPresenter,
 	                      final ITitlesClient titlesClient,
 	                      final ISchedulerProvider postExecuteSchedulerProvider,
-	                      final IDataRepository repository,
+	                      final IDataRepository<List<List<Data>>> repository,
 	                      final NetworkStateProvider networkStateProvider) {
 		this.fragmentView = fragmentView;
 		this.mainPresenter = mainPresenter;
@@ -87,7 +87,7 @@ class MainFragmentPresenter
 
 	private
 	void setViewData(final Consumer<? super List<List<Data>>> task) {
-		final Observable<List<List<Data>>> allDataObservable = repository.getAllDataObservable(mNetworkStateProvider.hasInternetConnection());
+		final Observable<List<List<Data>>> allDataObservable = repository.getData(mNetworkStateProvider.hasInternetConnection());
 		disposables.add(allDataObservable.observeOn(postExecuteSchedulerProvider.getScheduler())
 				.subscribe(task));
 	}

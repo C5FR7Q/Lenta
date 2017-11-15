@@ -6,6 +6,9 @@ import com.example.slava.lenta2.model.cache.Cache;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.repository.DataRepository;
 import com.example.slava.lenta2.repository.IDataRepository;
+import com.example.slava.lenta2.view.Data;
+
+import java.util.List;
 
 /**
  * Created by vva on 13/11/2017.
@@ -15,10 +18,10 @@ public
 class RepositoryProvider
 {
 	private static RepositoryProvider instance;
-	private final IDataRepository sDataRepository;
+	private final IDataRepository<List<List<Data>>> sDataRepository;
 
 	private
-	RepositoryProvider(final IDataRepository sDataRepository) {
+	RepositoryProvider(final IDataRepository<List<List<Data>>> sDataRepository) {
 		this.sDataRepository = sDataRepository;
 //		init other repositories, if need.
 	}
@@ -40,7 +43,7 @@ class RepositoryProvider
 	}
 
 	public
-	IDataRepository getDataRepository() {
+	IDataRepository<List<List<Data>>> getDataRepository() {
 		return sDataRepository;
 	}
 }
