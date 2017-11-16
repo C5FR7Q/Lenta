@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.only;
@@ -63,6 +62,9 @@ class RepositoryTest
 	@Test
 	public
 	void getDataWithoutInternet() throws Exception {
+		mRepository.getData(false);
+		mRepository.getData(false);
+		mRepository.getData(false);
 		mRepository.getData(false);
 		verify(mCache, only()).getDataList();
 	}

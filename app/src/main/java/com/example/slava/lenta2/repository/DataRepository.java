@@ -1,7 +1,5 @@
 package com.example.slava.lenta2.repository;
 
-import android.util.Log;
-
 import com.example.slava.lenta2.model.cache.ICache;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.other.DataListMapper;
@@ -42,9 +40,6 @@ class DataRepository
 		mMapper = mapper;
 		mSchedulerProvider = schedulerProvider;
 		mBehaviorSubject = BehaviorSubject.create();
-
-		/*For logging.*/
-		mBehaviorSubject.subscribe(lists -> Log.d("DataRepository", lists.get(0).get(0).getTitle()));
 	}
 
 	@Override

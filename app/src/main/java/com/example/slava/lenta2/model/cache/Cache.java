@@ -1,7 +1,6 @@
 package com.example.slava.lenta2.model.cache;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.slava.lenta2.other.ISchedulerProvider;
 import com.example.slava.lenta2.other.PreExecuteSchedulerProvider;
@@ -48,7 +47,6 @@ class Cache
 	@Override
 	public
 	Observable<List<List<Data>>> getDataList() {
-		Log.d("Cache", "GET IT FROM CACHE");
 		final Observable<List<List<Data>>> observable = Observable.create(e -> {
 			final String string = fileManager.readFileContent(filePath);
 			final List<List<Data>> data = serializer.deserialize(string);
