@@ -22,10 +22,15 @@ class DataListMapper
 	List<Data> apply(@NonNull final List<DataDTO> dataDTOs) throws Exception {
 		final List<Data> dataList = new ArrayList<>();
 		for (DataDTO dataDTO : dataDTOs) {
-			dataList.add(new Data(dataDTO.getLink(),
-					dataDTO.getTitle(), dataDTO.getDescription(),
-					dataDTO.getPubDate(), dataDTO.getPicLink(), dataDTO.getCategory()
-			));
+			try {
+				dataList.add(new Data(dataDTO.getLink(),
+						dataDTO.getTitle(), dataDTO.getDescription(),
+						dataDTO.getPubDate().substring(0, dataDTO.getPubDate().length() - 4),
+						dataDTO.getPicLink(), dataDTO.getCategory()
+				));
+			} catch (IndexOutOfBoundsException e) {
+				e.printStackTrace();
+			}
 		}
 		return dataList;
 	}

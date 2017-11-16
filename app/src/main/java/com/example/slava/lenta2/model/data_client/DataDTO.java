@@ -73,7 +73,7 @@ class DataDTO
 
 	public
 	String getPubDate() {
-		return pubDate.substring(0, pubDate.length() - 5);
+		return pubDate;
 	}
 
 	public

@@ -24,11 +24,6 @@ class DataRepository
 	private final ISchedulerProvider mSchedulerProvider;
 	private final
 	BehaviorSubject<List<List<Data>>> mBehaviorSubject;
-	/*A little bit time and I've understood, that Subject isn't necessary there by next reasons:
-	* 1)I supposed it can influence on putting data to cache. wrong.
-	* If app had been closed before data written to cache, it wouldn't have helped anyway
-	* 2)It would be necessary ideally, but getData with false hasInternetConnection can be called only once. After initial setViewData
-	* in MainFragmentPresenter it won't be possible to getData from cache.*/
 
 	public
 	DataRepository(final LentaClient lentaClient,
@@ -58,10 +53,9 @@ class DataRepository
 			});
 		} else {
 			final List<List<Data>> value = mBehaviorSubject.getValue();
-			if (value != null){
+			if (value != null) {
 				result = Observable.just(value);
-			}
-			else {
+			} else {
 				result = mCache.getDataList();
 				result.subscribe(mBehaviorSubject::onNext);
 			}
