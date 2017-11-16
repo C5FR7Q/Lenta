@@ -42,6 +42,8 @@ class DataRepository
 		mMapper = mapper;
 		mSchedulerProvider = schedulerProvider;
 		mBehaviorSubject = BehaviorSubject.create();
+
+		/*For logging.*/
 		mBehaviorSubject.subscribe(lists -> Log.d("DataRepository", lists.get(0).get(0).getTitle()));
 	}
 
