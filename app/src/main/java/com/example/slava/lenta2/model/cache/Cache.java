@@ -1,6 +1,7 @@
 package com.example.slava.lenta2.model.cache;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.slava.lenta2.other.ISchedulerProvider;
 import com.example.slava.lenta2.other.PreExecuteSchedulerProvider;
@@ -64,7 +65,9 @@ class Cache
 	@Override
 	public
 	Disposable putDataList(final List<List<Data>> data) {
+		Log.d("Cache", "Putting");
 		if (!data.isEmpty()) {
+			Log.d("Cache", "Successfully");
 			final String json = serializer.serialize(data);
 			return Observable.just(new Writer(json, fileManager, filePath))
 					.observeOn(mSchedulerProvider.getScheduler())

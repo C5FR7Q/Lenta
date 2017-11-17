@@ -40,24 +40,30 @@ class DataRepository
 	@Override
 	public
 	Observable<List<List<Data>>> getData(final boolean hasInternetConnection) {
+//		Log.d("DataRepository", String.valueOf(mBehaviorSubject.getValue() == null));
 		final Observable<List<List<Data>>> result;
 		if (hasInternetConnection) {
 			result = mLentaClient.getLists()
 					.flatMapIterable(lists -> lists)
 					.map(mMapper)
 					.toList()
-					.toObservable();
-			result.subscribe(data -> {
-				mCache.putDataList(data);
-				mBehaviorSubject.onNext(data);
-			});
+					.toObservable()
+					.doOnNext(lists -> {
+						mCache.putDataList(lists);
+						mBehaviorSubject.onNext(lists);
+					});
+
 		} else {
 			final List<List<Data>> value = mBehaviorSubject.getValue();
 			if (value != null) {
+//				Log.d("DataRepository", "value.size():" + value.size());
+				for (int i = 0; i < value.size(); i++){
+//					Log.d("DataRepository", "value.get(i).size():" + value.get(i).size());
+				}
 				result = Observable.just(value);
 			} else {
-				result = mCache.getDataList();
-				result.subscribe(mBehaviorSubject::onNext);
+				result = mCache.getDataList()
+						.doOnNext(mBehaviorSubject::onNext);
 			}
 		}
 		return result.subscribeOn(mSchedulerProvider.getScheduler());

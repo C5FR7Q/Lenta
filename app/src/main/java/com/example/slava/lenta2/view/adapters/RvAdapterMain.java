@@ -3,6 +3,7 @@ package com.example.slava.lenta2.view.adapters;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,10 @@ class RvAdapterMain
 	@Override
 	public
 	void onBindViewHolder(final ViewHolder holder, final int position) {
+		Log.d("RvAdapterMain", "mLists.size():" + mLists.size());
+		for (int i = 0; i < mLists.size(); i++){
+			Log.d("RvAdapterMain", "mLists.get(i).size():" + mLists.get(i).size());
+		}
 		final boolean includeDesc;
 		holder.tvTitle.setText(titles.get(position));
 		holder.btnView.setOnClickListener(v -> mViewBtnClickListener.onViewBtnClicked(position));

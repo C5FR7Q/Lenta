@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
 import io.reactivex.Observable;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -62,19 +64,75 @@ class RepositoryTest
 	@Test
 	public
 	void getDataWithoutInternet() throws Exception {
-		mRepository.getData(false);
-		mRepository.getData(false);
-		mRepository.getData(false);
-		mRepository.getData(false);
-		verify(mCache, only()).getDataList();
+		mRepository.getData(false).subscribe();
+		mRepository.getData(false).subscribe();
+		mRepository.getData(false).subscribe();
+		mRepository.getData(false).subscribe();
+		verify(mCache, Mockito.times(1)).getDataList();
 	}
 
 	@Test
 	public
 	void getDataWithInternet() throws Exception {
-		mRepository.getData(true);
+		mRepository.getData(true).subscribe();
 		verify(mLentaClient, only()).getLists();
 		verify(mCache, only()).putDataList(any());
+		mRepository.getData(true).subscribe();
+		verify(mCache, Mockito.times(2)).putDataList(any());
+	}
+
+	@Test
+	public
+	void getDataWithInternetSubscribe() throws Exception {
+		final SimpleCounter simpleCounter = mock(SimpleCounter.class);
+		when(mLentaClient.getLists())
+				.thenReturn(Observable.create(
+						e -> {
+							simpleCounter.plusOne();
+							e.onNext(new ArrayList<>());
+							e.onComplete();
+						}
+				));
+		mRepository.getData(true).subscribe(
+				lists -> {
+				},
+				throwable -> {
+				}
+		);
+
+		verify(mLentaClient, only()).getLists();
+		verify(mCache, only()).putDataList(any());
+		verify(simpleCounter, Mockito.times(1)).plusOne();
+	}
+
+	@Test
+	public
+	void getDataWithoutInternetSubscribe() throws Exception {
+		final SimpleCounter simpleCounter = mock(SimpleCounter.class);
+		when(mCache.getDataList())
+				.thenReturn(Observable.create(
+						e -> {
+							simpleCounter.plusOne();
+							e.onNext(new ArrayList<>());
+							e.onComplete();
+						}
+				));
+		mRepository.getData(false).subscribe(
+				lists -> {
+				},
+				throwable -> {
+				}
+		);
+		verify(mCache, only()).getDataList();
+		verify(simpleCounter, Mockito.times(1)).plusOne();
+	}
+
+	public
+	class SimpleCounter
+	{
+		public
+		void plusOne() {
+		}
 	}
 
 	@After
