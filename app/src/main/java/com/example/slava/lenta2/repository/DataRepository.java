@@ -1,5 +1,7 @@
 package com.example.slava.lenta2.repository;
 
+import android.util.Log;
+
 import com.example.slava.lenta2.model.cache.ICache;
 import com.example.slava.lenta2.model.data_client.LentaClient;
 import com.example.slava.lenta2.other.DataListMapper;
@@ -24,6 +26,7 @@ class DataRepository
 	private final ISchedulerProvider mSchedulerProvider;
 	private final
 	BehaviorSubject<List<List<Data>>> mBehaviorSubject;
+	private boolean mDataLoading = false;
 
 	public
 	DataRepository(final LentaClient lentaClient,
@@ -40,7 +43,19 @@ class DataRepository
 	@Override
 	public
 	Observable<List<List<Data>>> getData(final boolean hasInternetConnection) {
-//		Log.d("DataRepository", String.valueOf(mBehaviorSubject.getValue() == null));
+		if (!mDataLoading) {
+			final boolean isSkipping;
+			isSkipping = mBehaviorSubject.getValue() != null;
+			loadData(hasInternetConnection);
+			if (isSkipping){
+				return mBehaviorSubject.skip(1).hide();
+			}
+		}
+		return mBehaviorSubject.hide();
+	}
+
+	private void loadData(final boolean hasInternetConnection){
+		mDataLoading = true;
 		final Observable<List<List<Data>>> result;
 		if (hasInternetConnection) {
 			result = mLentaClient.getLists()
@@ -56,16 +71,20 @@ class DataRepository
 		} else {
 			final List<List<Data>> value = mBehaviorSubject.getValue();
 			if (value != null) {
-//				Log.d("DataRepository", "value.size():" + value.size());
-				for (int i = 0; i < value.size(); i++){
-//					Log.d("DataRepository", "value.get(i).size():" + value.get(i).size());
-				}
-				result = Observable.just(value);
+				result = Observable.create(e -> {
+					e.onNext(value);
+					e.onComplete();
+				});
 			} else {
-				result = mCache.getDataList()
-						.doOnNext(mBehaviorSubject::onNext);
+				result = mCache.getDataList().doOnNext(mBehaviorSubject::onNext);
+//				result.;
+//				mBehaviorSubject.onNext(result.blockingFirst());
 			}
 		}
-		return result.subscribeOn(mSchedulerProvider.getScheduler());
+
+		result.subscribeOn(mSchedulerProvider.getScheduler()).subscribe(lists -> {
+			mDataLoading = false;
+		});
+
 	}
 }

@@ -87,7 +87,7 @@ class RvAdapterItem
 		if (isFullSized) {
 			return mDataList.size();
 		}
-		return 4;
+		return Math.min(mDataList.size(), 4);
 	}
 
 	public

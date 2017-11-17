@@ -1,6 +1,7 @@
 package com.example.slava.lenta2.presenter;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.slava.lenta2.model.titles_client.ITitlesClient;
 import com.example.slava.lenta2.other.ISchedulerProvider;
@@ -75,7 +76,13 @@ class MainFragmentPresenter
 		fragmentView = view;
 		disposables = new CompositeDisposable();
 
-		setViewData(lists -> fragmentView.setDataLists(lists));
+		setViewData(lists -> {
+			Log.d("MainFragmentPresenter", "Getted");
+			fragmentView.setDataLists(lists);
+			fragmentView.setRefreshing(false);
+
+		});
+
 	}
 
 	@Override
@@ -88,7 +95,8 @@ class MainFragmentPresenter
 	void setViewData(final Consumer<? super List<List<Data>>> task) {
 		final Observable<List<List<Data>>> allDataObservable = repository.getData(mNetworkStateProvider.hasInternetConnection());
 		disposables.add(allDataObservable.observeOn(postExecuteSchedulerProvider.getScheduler())
-				.subscribe(task));
+				.subscribe(task, throwable -> {
+				}, () -> Log.d("MainFragmentPresenter", "completed")));
 	}
 
 	@Override
@@ -108,12 +116,7 @@ class MainFragmentPresenter
 			fragmentView.setRefreshing(false);
 			return;
 		}
-
-		setViewData(lists -> {
-			fragmentView.setDataLists(lists);
-			fragmentView.setRefreshing(false);
-		});
-
+		repository.getData(mNetworkStateProvider.hasInternetConnection());
 	}
 
 	@Override
